@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ARTHOUSE — Web3 Creator Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;300;400;500;700&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cursor-color: #000;
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: #ffffff;
+            color: #000000;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        /* Mobile Optimized Grid Background */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .grid-bg {
+                background-size: 50px 50px;
+            }
+        }
+        
+        /* Syntax Highlighting */
+        .code-comment { color: #666; font-style: italic; }
+        .code-keyword { font-weight: 700; }
+        .code-string { border-bottom: 1px solid #000; }
+        
+        /* ASCII Borders - Mobile Optimized */
+        .ascii-box {
+            border: 1px solid #000;
+            position: relative;
+        }
+        
+        .ascii-box::before {
+            content: '+';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            background: #fff;
+            padding: 0 2px;
+            font-size: 10px;
+            line-height: 1;
+        }
+        
+        .ascii-box::after {
+            content: '+';
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background: #fff;
+            padding: 0 2px;
+            font-size: 10px;
+            line-height: 1;
+        }
+        
+        /* Mobile Touch Optimizations */
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Hover Fill Effect - Disabled on Touch */
+        @media (hover: hover) {
+            .hover-fill {
+                position: relative;
+                overflow: hidden;
+                transition: color 0.3s ease;
+            }
+            
+            .hover-fill::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                transition: left 0.3s ease;
+                z-index: -1;
+            }
+            
+            .hover-fill:hover::before {
+                left: 0;
+            }
+            
+            .hover-fill:hover {
+                color: #fff;
+            }
+        }
+        
+        @media (hover: none) {
+            .hover-fill:active {
+                background: #000;
+                color: #fff;
+            }
+        }
+        
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Tab Active State */
+        .hub-tab.active {
+            background: #000;
+            color: #fff;
+        }
+        
+        /* Network Cards - Mobile Optimized */
+        .network-card {
+            transition: all 0.2s ease;
+        }
+        
+        @media (hover: hover) {
+            .network-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 4px 4px 0px 0px #000;
+            }
+        }
+        
+        .network-card:active {
+            transform: scale(0.98);
+        }
+        
+        /* Terminal Effect */
+        .terminal-cursor::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* Mobile Navigation */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* Horizontal Scroll for Mobile */
+        .horizontal-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .horizontal-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Sticky Mobile Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        /* Mobile Typography Scale */
+        @media (max-width: 640px) {
+            .text-mobile-hero {
+                font-size: 2.5rem;
+                line-height: 1;
+            }
+        }
+        
+        /* Prevent Text Selection on UI Elements */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Loading Animation */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .animate-spin-slow {
+            animation: spin-slow 20s linear infinite;
+        }
+        
+        /* Safe Area for Notch */
+        .safe-area-top {
+            padding-top: env(safe-area-inset-top);
+        }
+        
+        .safe-area-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+</head>
+<body class="grid-bg">
+
+    <!-- Mobile Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 border-b border-black/10 z-50 safe-area-top">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] sm:text-xs code-comment">//</span>
+                <span class="font-display text-xl sm:text-2xl font-bold tracking-tighter">ARTHOUSE</span>
+                <span class="text-[10px] sm:text-xs px-2 py-0.5 border border-black/20 rounded-full">beta</span>
+            </div>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-8 text-sm items-center">
+                <a href="#manifesto" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">class</span>&nbsp;About</a>
+                <a href="#hubs" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">def</span>&nbsp;Hubs()</a>
+                <a href="#network" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">import</span>&nbsp;Network</a>
+                <a href="#join" class="ascii-box px-4 py-2 text-xs hover-fill touch-target flex items-center justify-center">connect_wallet()</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="menuBtn" class="md:hidden border border-black px-3 py-2 text-xs active:bg-black active:text-white transition-colors touch-target no-select">
+                [menu]
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="mobile-menu fixed inset-0 bg-white z-40 pt-20 px-6 md:hidden">
+        <div class="flex flex-col gap-4 text-lg">
+            <a href="#manifesto" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target">
+                <span><span class="code-comment">#</span> About</span>
+                <span>→</span>
+            </a>
+            <a href="#hubs" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target">
+                <span><span class="code-comment">#</span> Hubs</span>
+                <span>→</span>
+            </a>
+            <a href="#network" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target">
+                <span><span class="code-comment">#</span> Network</span>
+                <span>→</span>
+            </a>
+            <a href="#join" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target">
+                <span><span class="code-comment">#</span> Connect Wallet</span>
+                <span>→</span>
+            </a>
+        </div>
+        <div class="absolute bottom-8 left-6 right-6">
+            <div class="ascii-box p-4 text-center text-xs code-comment">
+                ARTHOUSE.network v0.1<br>
+                Mobile Optimized
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center relative pt-16 sm:pt-20 px-4">
+        <div class="max-w-6xl mx-auto w-full">
+            <div class="grid md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-7 space-y-6 sm:space-y-8">
+                    <!-- Code Header -->
+                    <div class="space-y-1 text-[10px] sm:text-xs code-comment reveal">
+                        <p>// ARTHOUSE.network</p>
+                        <p>// protocol: web3_creative_bridge</p>
+                        <p>// status: active</p>
+                    </div>
+
+                    <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-bold leading-none tracking-tighter reveal text-mobile-hero" style="transition-delay: 0.1s">
+                        CONNECTING<br>
+                        <span class="terminal-cursor">WEB3_CREATORS</span>
+                    </h1>
+
+                    <div class="max-w-xl space-y-3 sm:space-y-4 reveal" style="transition-delay: 0.2s">
+                        <p class="text-base sm:text-lg md:text-xl leading-relaxed border-l-2 border-black pl-4 sm:pl-6 code-keyword">
+                            The decentralized network matching quality content creators with ambitious Web3 projects.
+                        </p>
+                        <p class="pl-4 sm:pl-6 text-xs sm:text-sm code-comment">
+                            No middlemen. Smart contracts. Verified talent.
+                        </p>
+                    </div>
+
+                    <!-- Dual CTA -->
+                    <div class="flex flex-col gap-3 sm:gap-4 pt-2 sm:pt-4 reveal" style="transition-delay: 0.3s">
+                        <a href="#creatorhub" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 text-center hover-fill transition-all group touch-target">
+                            <span class="block text-[10px] sm:text-xs code-comment mb-1">for creators</span>
+                            <span class="font-display font-bold text-base sm:text-lg">JOIN_CREATORHUB</span>
+                        </a>
+                        <a href="#projecthub" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 text-center hover:bg-black hover:text-white transition-all group touch-target">
+                            <span class="block text-[10px] sm:text-xs code-comment group-hover:text-white/50 mb-1">for projects</span>
+                            <span class="font-display font-bold text-base sm:text-lg">JOIN_PROJECTHUB</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Visual Element - Hidden on Small Mobile -->
+                <div class="hidden sm:block md:col-span-5 reveal" style="transition-delay: 0.4s">
+                    <div class="ascii-box p-4 sm:p-8 aspect-square flex flex-col justify-between bg-white max-w-sm mx-auto">
+                        <div class="flex justify-between text-[10px] sm:text-xs code-comment">
+                            <span>network_visualization</span>
+                            <span>.svg</span>
+                        </div>
+                        <div class="flex-1 flex items-center justify-center p-4">
+                            <svg viewBox="0 0 200 200" class="w-full h-full animate-spin-slow">
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="#000" stroke-width="0.5" stroke-dasharray="4 4"/>
+                                <circle cx="100" cy="100" r="50" fill="none" stroke="#000" stroke-width="1"/>
+                                <circle cx="100" cy="20" r="6" fill="#000"/>
+                                <circle cx="180" cy="100" r="6" fill="#000"/>
+                                <circle cx="100" cy="180" r="6" fill="#000"/>
+                                <circle cx="20" cy="100" r="6" fill="#000"/>
+                                <line x1="100" y1="20" x2="180" y2="100" stroke="#000" stroke-width="0.5"/>
+                                <line x1="180" y1="100" x2="100" y2="180" stroke="#000" stroke-width="0.5"/>
+                                <line x1="100" y1="180" x2="20" y2="100" stroke="#000" stroke-width="0.5"/>
+                                <line x1="20" y1="100" x2="100" y2="20" stroke="#000" stroke-width="0.5"/>
+                                <text x="100" y="105" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#000">ARTHOUSE</text>
+                            </svg>
+                        </div>
+                        <div class="text-[10px] sm:text-xs code-comment">
+                            nodes: 2,847 | projects: 156
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What is ARTHOUSE -->
+    <section id="manifesto" class="py-16 sm:py-32 border-t border-black/10 px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="grid md:grid-cols-12 gap-8 sm:gap-12">
+                <div class="md:col-span-4 reveal">
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold mb-4">
+                        <span class="code-comment">#</span> WHAT_IS_ARTHOUSE
+                    </h2>
+                    <div class="text-[10px] sm:text-xs code-comment space-y-1">
+                        <p>/*</p>
+                        <p>&nbsp;* Decentralized creative</p>
+                        <p>&nbsp;* economy infrastructure</p>
+                        <p>&nbsp;*/</p>
+                    </div>
+                </div>
+
+                <div class="md:col-span-8 space-y-6 reveal">
+                    <p class="text-lg sm:text-xl md:text-2xl leading-relaxed font-display">
+                        ARTHOUSE is the bridge between <span class="code-string">Web3 projects</span> and <span class="code-string">verified creators</span>. We vet every talent, manage smart contract escrow, and ensure every deliverable meets blockchain standards.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8">
+                        <div class="border-t border-black pt-4">
+                            <div class="text-xl sm:text-2xl font-display font-bold mb-2">01</div>
+                            <h3 class="font-bold mb-2 text-sm sm:text-base code-keyword">VETTED_CREATORS</h3>
+                            <p class="text-xs sm:text-sm code-comment">Every creator verified for quality, reliability, and authentic on-chain reputation.</p>
+                        </div>
+                        <div class="border-t border-black pt-4">
+                            <div class="text-xl sm:text-2xl font-display font-bold mb-2">02</div>
+                            <h3 class="font-bold mb-2 text-sm sm:text-base code-keyword">SMART_MATCHING</h3>
+                            <p class="text-xs sm:text-sm code-comment">AI-powered pairing based on project needs and creator expertise.</p>
+                        </div>
+                        <div class="border-t border-black pt-4">
+                            <div class="text-xl sm:text-2xl font-display font-bold mb-2">03</div>
+                            <h3 class="font-bold mb-2 text-sm sm:text-base code-keyword">ESCROW_CONTRACTS</h3>
+                            <p class="text-xs sm:text-sm code-comment">Secure milestone-based payments via smart contracts. No disputes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dual Hub Section -->
+    <section id="hubs" class="py-16 sm:py-32 bg-black text-white relative overflow-hidden px-4">
+        <div class="absolute inset-0 grid-bg opacity-20"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-8 sm:mb-16 reveal">
+                <h2 class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-4">DUAL_HUB_ARCHITECTURE</h2>
+                <p class="code-comment text-xs sm:text-sm">// choose your entry point</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-px bg-white/20">
+                <!-- CREATORHUB -->
+                <div id="creatorhub" class="bg-black p-6 sm:p-8 md:p-12 hover:bg-white hover:text-black transition-colors duration-500 group reveal touch-target">
+                    <div class="h-full flex flex-col justify-between min-h-[400px] sm:min-h-[500px]">
+                        <div>
+                            <div class="flex justify-between items-start mb-6 sm:mb-8">
+                                <span class="text-[10px] sm:text-xs code-comment group-hover:text-black/50">HUB_TYPE_01</span>
+                                <span class="ascii-box px-2 sm:px-3 py-1 text-[10px] sm:text-xs group-hover:border-black">CREATORS</span>
+                            </div>
+                            
+                            <h3 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">CREATOR<br>HUB</h3>
+                            
+                            <p class="text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
+                                For content creators, artists, developers, and writers building the future of Web3 media.
+                            </p>
+
+                            <div class="space-y-2 sm:space-y-3 text-xs sm:text-sm">
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
+                                    <span>Access to verified Web3 projects</span>
+                                </div>
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
+                                    <span>Smart contract payment protection</span>
+                                </div>
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
+                                    <span>Build on-chain reputation</span>
+                                </div>
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
+                                    <span>Community grants & bounties</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 sm:pt-8">
+                            <a href="#" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold border border-current px-4 sm:px-6 py-2 sm:py-3 hover-fill touch-target">
+                                <span>APPLY_AS_CREATOR()</span>
+                                <span>→</span>
+                            </a>
+                            <p class="text-[10px] sm:text-xs code-comment mt-3 sm:mt-4 group-hover:text-black/50">Current queue: 48hr avg review</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROJECTHUB -->
+                <div id="projecthub" class="bg-black p-6 sm:p-8 md:p-12 hover:bg-white hover:text-black transition-colors duration-500 group reveal touch-target" style="transition-delay: 0.1s">
+                    <div class="h-full flex flex-col justify-between min-h-[400px] sm:min-h-[500px]">
+                        <div>
+                            <div class="flex justify-between items-start mb-6 sm:mb-8">
+                                <span class="text-[10px] sm:text-xs code-comment group-hover:text-black/50">HUB_TYPE_02</span>
+                                <span class="ascii-box px-2 sm:px-3 py-1 text-[10px] sm:text-xs group-hover:border-black">PROJECTS</span>
+                            </div>
+                            
+                            <h3 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">PROJECT<br>HUB</h3>
+                            
+                            <p class="text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
+                                For Web3 protocols, DAOs, and NFT projects seeking quality content and creative talent.
+                            </p>
+
+                            <div class="space-y-2 sm:space-y-3 text-xs sm:text-sm">
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
+                                    <span>Pre-vetted creator network</span>
+                                </div>
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
+                                    <span>Campaign management tools</span>
+                                </div>
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
+                                    <span>Milestone-based deliverables</span>
+                                </div>
+                                <div class="flex items-center gap-2 sm:gap-3">
+                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
+                                    <span>Analytics & ROI tracking</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 sm:pt-8">
+                            <a href="#" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold border border-current px-4 sm:px-6 py-2 sm:py-3 hover-fill touch-target">
+                                <span>SUBMIT_PROJECT()</span>
+                                <span>→</span>
+                            </a>
+                            <p class="text-[10px] sm:text-xs code-comment mt-3 sm:mt-4 group-hover:text-black/50">Instant matching available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Network -->
+    <section id="network" class="py-16 sm:py-32 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-12 gap-4 reveal">
+                <div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold mb-2">FEATURED_NETWORK</h2>
+                    <p class="code-comment text-xs sm:text-sm">// recent successful matches</p>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button class="hub-tab active px-3 sm:px-4 py-2 text-xs border border-black flex-1 sm:flex-none touch-target" onclick="switchTab('creators', this)">CREATORS</button>
+                    <button class="hub-tab px-3 sm:px-4 py-2 text-xs border border-black flex-1 sm:flex-none touch-target" onclick="switchTab('projects', this)">PROJECTS</button>
+                </div>
+            </div>
+
+            <!-- Creators Grid - Horizontal Scroll on Mobile -->
+            <div id="creators-grid" class="horizontal-scroll flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 sm:pb-0">
+                <div class="network-card ascii-box p-4 sm:p-6 bg-white min-w-[280px] sm:min-w-0 reveal touch-target">
+                    <div class="aspect-square bg-neutral-100 mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl">👾</div>
+                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">@pixel_eth</h3>
+                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3">Generative Artist</p>
+                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-black text-white">p5.js</span>
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-black">Blender</span>
+                    </div>
+                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-black/10 text-[10px] sm:text-xs">
+                        <span class="code-comment">Completed: 12 projects</span>
+                    </div>
+                </div>
+
+                <div class="network-card ascii-box p-4 sm:p-6 bg-white min-w-[280px] sm:min-w-0 reveal touch-target" style="transition-delay: 0.1s">
+                    <div class="aspect-square bg-neutral-100 mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl">📝</div>
+                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">@chain_writer</h3>
+                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3">Technical Writer</p>
+                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-black text-white">Solidity</span>
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-black">Docs</span>
+                    </div>
+                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-black/10 text-[10px] sm:text-xs">
+                        <span class="code-comment">Completed: 8 projects</span>
+                    </div>
+                </div>
+
+                <div class="network-card ascii-box p-4 sm:p-6 bg-white min-w-[280px] sm:min-w-0 reveal touch-target" style="transition-delay: 0.2s">
+                    <div class="aspect-square bg-neutral-100 mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl">🎬</div>
+                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">@web3_films</h3>
+                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3">Video Producer</p>
+                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-black text-white">Motion</span>
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-black">3D</span>
+                    </div>
+                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-black/10 text-[10px] sm:text-xs">
+                        <span class="code-comment">Completed: 15 projects</span>
+                    </div>
+                </div>
+
+                <div class="network-card ascii-box p-4 sm:p-6 bg-white min-w-[280px] sm:min-w-0 reveal touch-target" style="transition-delay: 0.3s">
+                    <div class="aspect-square bg-neutral-100 mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl">💻</div>
+                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">@dev_dao</h3>
+                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3">Frontend Dev</p>
+                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-black text-white">React</span>
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-black">Web3</span>
+                    </div>
+                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-black/10 text-[10px] sm:text-xs">
+                        <span class="code-comment">Completed: 6 projects</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects Grid (Hidden by default) - Horizontal Scroll on Mobile -->
+            <div id="projects-grid" class="horizontal-scroll flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 sm:pb-0 hidden">
+                <div class="network-card ascii-box p-4 sm:p-6 bg-black text-white min-w-[280px] sm:min-w-0 touch-target">
+                    <div class="aspect-square bg-neutral-800 mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-display">DEFI</div>
+                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">Nexus Protocol</h3>
+                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3 text-white/50">DeFi Launch Campaign</p>
+                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-black">Content</span>
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-white">Video</span>
+                    </div>
+                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-[10px] sm:text-xs">
+                        <span class="code-comment text-white/50">Budget: 15 ETH</span>
+                    </div>
+                </div>
+
+                <div class="network-card ascii-box p-4 sm:p-6 bg-black text-white min-w-[280px] sm:min-w-0 touch-target">
+                    <div class="aspect-square bg-neutral-800 mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-display">NFT</div>
+                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">Abstract Chain</h3>
+                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3 text-white/50">Generative Art Drop</p>
+                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-black">Art</span>
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-white">Dev</span>
+                    </div>
+                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-[10px] sm:text-xs">
+                        <span class="code-comment text-white/50">Budget: 8 ETH</span>
+                    </div>
+                </div>
+
+                <div class="network-card ascii-box p-4 sm:p-6 bg-black text-white min-w-[280px] sm:min-w-0 touch-target">
+                    <div class="aspect-square bg-neutral-800 mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-display">DAO</div>
+                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">MetaGov</h3>
+                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3 text-white/50">Documentation & Design</p>
+                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-black">Writing</span>
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-white">UI</span>
+                    </div>
+                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-[10px] sm:text-xs">
+                        <span class="code-comment text-white/50">Budget: 12 ETH</span>
+                    </div>
+                </div>
+
+                <div class="network-card ascii-box p-4 sm:p-6 bg-black text-white min-w-[280px] sm:min-w-0 touch-target">
+                    <div class="aspect-square bg-neutral-800 mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-display">L2</div>
+                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">ZeroChain</h3>
+                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3 text-white/50">Educational Series</p>
+                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-black">Video</span>
+                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-white">Motion</span>
+                    </div>
+                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-[10px] sm:text-xs">
+                        <span class="code-comment text-white/50">Budget: 20 ETH</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 sm:mt-12 text-center reveal">
+                <a href="#" class="inline-block ascii-box px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm hover-fill touch-target">
+                    view_full_network()
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats / How it Works -->
+    <section class="py-16 sm:py-32 border-t border-black/10 bg-neutral-50 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-3 gap-4 sm:gap-12 mb-12 sm:mb-20">
+                <div class="text-center reveal">
+                    <div class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-2">2,847</div>
+                    <div class="text-[10px] sm:text-xs md:text-sm code-comment">VERIFIED_CREATORS</div>
+                </div>
+                <div class="text-center reveal" style="transition-delay: 0.1s">
+                    <div class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-2">156</div>
+                    <div class="text-[10px] sm:text-xs md:text-sm code-comment">ACTIVE_PROJECTS</div>
+                </div>
+                <div class="text-center reveal" style="transition-delay: 0.2s">
+                    <div class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-2">$4.2M</div>
+                    <div class="text-[10px] sm:text-xs md:text-sm code-comment">TVL</div>
+                </div>
+            </div>
+
+            <div class="ascii-box bg-white p-4 sm:p-8 md:p-12 reveal">
+                <h3 class="font-display text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center">HOW_IT_WORKS</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
+                    <div class="text-center">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 font-bold text-sm sm:text-base">1</div>
+                        <h4 class="font-bold mb-1 sm:mb-2 text-xs sm:text-sm code-keyword">CONNECT</h4>
+                        <p class="text-[10px] sm:text-xs code-comment">Link your wallet and verify identity</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 font-bold text-sm sm:text-base">2</div>
+                        <h4 class="font-bold mb-1 sm:mb-2 text-xs sm:text-sm code-keyword">MATCH</h4>
+                        <p class="text-[10px] sm:text-xs code-comment">AI pairs creators with projects</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 font-bold text-sm sm:text-base">3</div>
+                        <h4 class="font-bold mb-1 sm:mb-2 text-xs sm:text-sm code-keyword">COLLAB</h4>
+                        <p class="text-[10px] sm:text-xs code-comment">Work with milestone tracking</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 font-bold text-sm sm:text-base">4</div>
+                        <h4 class="font-bold mb-1 sm:mb-2 text-xs sm:text-sm code-keyword">EARN</h4>
+                        <p class="text-[10px] sm:text-xs code-comment">Automatic payment via smart contract</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join CTA -->
+    <section id="join" class="py-16 sm:py-32 bg-black text-white px-4 safe-area-bottom">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 reveal">READY_TO_COMPILE?</h2>
+            <p class="text-base sm:text-xl code-comment mb-8 sm:mb-12 reveal" style="transition-delay: 0.1s">
+                Join the decentralized creative economy.<br class="sm:hidden"> Choose your hub.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center reveal" style="transition-delay: 0.2s">
+                <a href="#" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-neutral-200 transition-colors font-bold text-sm sm:text-base touch-target">
+                    INIT_CREATORHUB()
+                </a>
+                <a href="#" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 border border-white hover:bg-white hover:text-black transition-colors font-bold text-sm sm:text-base touch-target">
+                    INIT_PROJECTHUB()
+                </a>
+            </div>
+
+            <div class="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-white/20 flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] sm:text-xs code-comment reveal" style="transition-delay: 0.3s">
+                <div class="text-center sm:text-left">
+                    <p>ARTHUSE.network</p>
+                    <p>© 2024 All rights reserved</p>
+                </div>
+                <div class="text-center sm:text-right">
+                    <p>Contract: 0x71C...9A2F</p>
+                    <p>Audited by CertiK</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            mobileMenu.classList.toggle('open', isMenuOpen);
+            menuBtn.textContent = isMenuOpen ? '[close]' : '[menu]';
+            document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                toggleMenu();
+            });
+        });
+
+        // Close menu on resize if open
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768 && isMenuOpen) {
+                toggleMenu();
+            }
+        });
+
+        // Scroll Reveal - Optimized for mobile
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    // Unobserve after reveal to save resources
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Tab Switching - Updated to handle button reference
+        function switchTab(tab, btn) {
+            const creatorsGrid = document.getElementById('creators-grid');
+            const projectsGrid = document.getElementById('projects-grid');
+            const tabs = document.querySelectorAll('.hub-tab');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            if (tab === 'creators') {
+                creatorsGrid.classList.remove('hidden');
+                projectsGrid.classList.add('hidden');
+                // Re-trigger scroll reveal for visible elements
+                creatorsGrid.querySelectorAll('.reveal').forEach(el => {
+                    el.classList.remove('active');
+                    setTimeout(() => el.classList.add('active'), 50);
+                });
+            } else {
+                creatorsGrid.classList.add('hidden');
+                projectsGrid.classList.remove('hidden');
+                // Re-trigger scroll reveal for visible elements
+                projectsGrid.querySelectorAll('.network-card').forEach(el => {
+                    el.classList.remove('active');
+                    setTimeout(() => el.classList.add('active'), 50);
+                });
+            }
+        }
+
+        // Smooth scroll with offset for fixed header
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Touch feedback optimization
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+            el.addEventListener('touchend', function() {
+                this.style.transform = '';
+            });
+        });
+
+        // Prevent zoom on double tap for iOS
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
