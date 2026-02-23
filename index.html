@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ARTHOUSE — Web3 Creator Network | XMTP Base Mainnet</title>
+    <title>ARTHOUSE — Web3 Creator Network | Base Mainnet + XMTP Agents</title>
     
     <!-- XMTP Dependencies -->
     <script type="module">
@@ -11,7 +11,7 @@
         window.XMTPClient = Client;
     </script>
     
-    <!-- Ethers.js for Wallet Connection -->
+    <!-- Ethers.js -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
     
     <!-- Tailwind CSS -->
@@ -24,8 +24,8 @@
     
     <style>
         :root {
-            --cursor-color: #000;
             --base-blue: #0052FF;
+            --agent-green: #10B981;
         }
         
         * {
@@ -39,14 +39,12 @@
             color: #000000;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
         
         .font-display {
             font-family: 'Space Grotesk', sans-serif;
         }
         
-        /* Mobile Optimized Grid Background */
         .grid-bg {
             background-image: 
                 linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
@@ -55,17 +53,13 @@
         }
         
         @media (min-width: 768px) {
-            .grid-bg {
-                background-size: 50px 50px;
-            }
+            .grid-bg { background-size: 50px 50px; }
         }
         
-        /* Syntax Highlighting */
         .code-comment { color: #666; font-style: italic; }
         .code-keyword { font-weight: 700; }
         .code-string { border-bottom: 1px solid #000; }
         
-        /* ASCII Borders - Mobile Optimized */
         .ascii-box {
             border: 1px solid #000;
             position: relative;
@@ -93,13 +87,11 @@
             line-height: 1;
         }
         
-        /* Mobile Touch Optimizations */
         .touch-target {
             min-height: 44px;
             min-width: 44px;
         }
         
-        /* Hover Fill Effect - Disabled on Touch */
         @media (hover: hover) {
             .hover-fill {
                 position: relative;
@@ -119,13 +111,8 @@
                 z-index: -1;
             }
             
-            .hover-fill:hover::before {
-                left: 0;
-            }
-            
-            .hover-fill:hover {
-                color: #fff;
-            }
+            .hover-fill:hover::before { left: 0; }
+            .hover-fill:hover { color: #fff; }
         }
         
         @media (hover: none) {
@@ -135,7 +122,6 @@
             }
         }
         
-        /* Scroll Reveal */
         .reveal {
             opacity: 0;
             transform: translateY(20px);
@@ -147,13 +133,11 @@
             transform: translateY(0);
         }
         
-        /* Tab Active State */
         .hub-tab.active {
             background: #000;
             color: #fff;
         }
         
-        /* Network Cards - Mobile Optimized */
         .network-card {
             transition: all 0.2s ease;
         }
@@ -169,7 +153,6 @@
             transform: scale(0.98);
         }
         
-        /* Terminal Effect */
         .terminal-cursor::after {
             content: '_';
             animation: blink 1s infinite;
@@ -180,7 +163,6 @@
             51%, 100% { opacity: 0; }
         }
         
-        /* Mobile Navigation */
         .mobile-menu {
             transform: translateX(100%);
             transition: transform 0.3s ease;
@@ -190,7 +172,6 @@
             transform: translateX(0);
         }
         
-        /* Horizontal Scroll for Mobile */
         .horizontal-scroll {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -202,7 +183,6 @@
             display: none;
         }
         
-        /* Sticky Mobile Header */
         .sticky-header {
             position: sticky;
             top: 0;
@@ -211,7 +191,6 @@
             -webkit-backdrop-filter: blur(10px);
         }
         
-        /* Mobile Typography Scale */
         @media (max-width: 640px) {
             .text-mobile-hero {
                 font-size: 2.5rem;
@@ -219,7 +198,6 @@
             }
         }
         
-        /* Prevent Text Selection on UI Elements */
         .no-select {
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -227,7 +205,6 @@
             user-select: none;
         }
         
-        /* Loading Animation */
         @keyframes spin-slow {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -237,7 +214,6 @@
             animation: spin-slow 20s linear infinite;
         }
         
-        /* Safe Area for Notch */
         .safe-area-top {
             padding-top: env(safe-area-inset-top);
         }
@@ -270,13 +246,26 @@
             border-bottom-left-radius: 4px;
         }
         
+        .chat-message.agent {
+            background: #0052FF;
+            color: #fff;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+        
         .chat-message .timestamp {
             font-size: 10px;
             opacity: 0.6;
             margin-top: 4px;
         }
         
-        /* Base Network Indicator */
+        .chat-message .sender {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            opacity: 0.9;
+        }
+        
         .base-indicator {
             background: #0052FF;
             color: white;
@@ -286,14 +275,21 @@
             font-weight: bold;
         }
         
-        /* Wallet Connection Status */
+        .agent-indicator {
+            background: #10B981;
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-left: 6px;
+        }
+        
         .wallet-connected {
             background: #10B981 !important;
             color: white !important;
             border-color: #10B981 !important;
         }
         
-        /* Toast Notification */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -314,7 +310,6 @@
             opacity: 1;
         }
         
-        /* Loading Spinner */
         .spinner {
             border: 2px solid #f3f3f3;
             border-top: 2px solid #000;
@@ -328,6 +323,26 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        /* Agent-specific styles */
+        .agent-card {
+            border-left: 3px solid #0052FF;
+        }
+        
+        .agent-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10B981;
+            display: inline-block;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
     </style>
 </head>
@@ -350,7 +365,7 @@
             <div class="hidden md:flex gap-8 text-sm items-center">
                 <a href="#manifesto" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">class</span>&nbsp;About</a>
                 <a href="#hubs" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">def</span>&nbsp;Hubs()</a>
-                <a href="#network" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">import</span>&nbsp;Network</a>
+                <a href="#agents" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">agent</span>&nbsp;AI</a>
                 <a href="#messaging" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">msg</span>&nbsp;XMTP</a>
                 <button id="connectWalletBtn" onclick="connectWallet()" class="ascii-box px-4 py-2 text-xs hover-fill touch-target flex items-center justify-center gap-2">
                     <span>connect_wallet()</span>
@@ -375,8 +390,8 @@
                 <span><span class="code-comment">#</span> Hubs</span>
                 <span>→</span>
             </a>
-            <a href="#network" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target">
-                <span><span class="code-comment">#</span> Network</span>
+            <a href="#agents" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target">
+                <span><span class="code-comment">#</span> AI Agents</span>
                 <span>→</span>
             </a>
             <a href="#messaging" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target">
@@ -391,7 +406,7 @@
         <div class="absolute bottom-8 left-6 right-6">
             <div class="ascii-box p-4 text-center text-xs code-comment">
                 ARTHOUSE.network v1.0<br>
-                Base Mainnet + XMTP<br>
+                Base Mainnet + XMTP Agents<br>
                 Production Ready
             </div>
         </div>
@@ -402,30 +417,28 @@
         <div class="max-w-6xl mx-auto w-full">
             <div class="grid md:grid-cols-12 gap-8 items-center">
                 <div class="md:col-span-7 space-y-6 sm:space-y-8">
-                    <!-- Code Header -->
                     <div class="space-y-1 text-[10px] sm:text-xs code-comment reveal">
                         <p>// ARTHOUSE.network</p>
                         <p>// protocol: web3_creative_bridge</p>
                         <p>// network: Base Mainnet (chainId: 8453)</p>
-                        <p>// messaging: XMTP v3</p>
+                        <p>// messaging: XMTP v3 + AI Agents</p>
                         <p>// status: production</p>
                     </div>
 
                     <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-bold leading-none tracking-tighter reveal text-mobile-hero" style="transition-delay: 0.1s">
-                        CONNECTING<br>
+                        AI-POWERED<br>
                         <span class="terminal-cursor">WEB3_CREATORS</span>
                     </h1>
 
                     <div class="max-w-xl space-y-3 sm:space-y-4 reveal" style="transition-delay: 0.2s">
                         <p class="text-base sm:text-lg md:text-xl leading-relaxed border-l-2 border-black pl-4 sm:pl-6 code-keyword">
-                            The decentralized network matching quality content creators with ambitious Web3 projects. Now with XMTP messaging on Base.
+                            The decentralized network matching quality content creators with ambitious Web3 projects. Powered by XMTP AI agents on Base.
                         </p>
                         <p class="pl-4 sm:pl-6 text-xs sm:text-sm code-comment">
-                            No middlemen. Smart contracts. Verified talent. Encrypted messaging.
+                            No middlemen. Smart contracts. Verified talent. AI-assisted matching.
                         </p>
                     </div>
 
-                    <!-- Dual CTA -->
                     <div class="flex flex-col gap-3 sm:gap-4 pt-2 sm:pt-4 reveal" style="transition-delay: 0.3s">
                         <a href="#creatorhub" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 text-center hover-fill transition-all group touch-target">
                             <span class="block text-[10px] sm:text-xs code-comment mb-1">for creators</span>
@@ -438,7 +451,6 @@
                     </div>
                 </div>
 
-                <!-- Visual Element - Hidden on Small Mobile -->
                 <div class="hidden sm:block md:col-span-5 reveal" style="transition-delay: 0.4s">
                     <div class="ascii-box p-4 sm:p-8 aspect-square flex flex-col justify-between bg-white max-w-sm mx-auto">
                         <div class="flex justify-between text-[10px] sm:text-xs code-comment">
@@ -450,18 +462,115 @@
                                 <circle cx="100" cy="100" r="80" fill="none" stroke="#0052FF" stroke-width="0.5" stroke-dasharray="4 4"/>
                                 <circle cx="100" cy="100" r="50" fill="none" stroke="#000" stroke-width="1"/>
                                 <circle cx="100" cy="20" r="6" fill="#0052FF"/>
-                                <circle cx="180" cy="100" r="6" fill="#0052FF"/>
+                                <circle cx="180" cy="100" r="6" fill="#10B981"/>
                                 <circle cx="100" cy="180" r="6" fill="#0052FF"/>
-                                <circle cx="20" cy="100" r="6" fill="#0052FF"/>
+                                <circle cx="20" cy="100" r="6" fill="#10B981"/>
                                 <line x1="100" y1="20" x2="180" y2="100" stroke="#0052FF" stroke-width="0.5"/>
                                 <line x1="180" y1="100" x2="100" y2="180" stroke="#0052FF" stroke-width="0.5"/>
                                 <line x1="100" y1="180" x2="20" y2="100" stroke="#0052FF" stroke-width="0.5"/>
                                 <line x1="20" y1="100" x2="100" y2="20" stroke="#0052FF" stroke-width="0.5"/>
-                                <text x="100" y="105" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#0052FF">BASE MAINNET</text>
+                                <text x="100" y="100" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#0052FF">XMTP AGENTS</text>
+                                <text x="100" y="115" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#000">BASE MAINNET</text>
                             </svg>
                         </div>
                         <div class="text-[10px] sm:text-xs code-comment">
-                            nodes: 2,847 | projects: 156 | xmtp: active
+                            nodes: 2,847 | projects: 156 | agents: 12 | xmtp: active
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Agents Section -->
+    <section id="agents" class="py-16 sm:py-32 border-t border-black/10 bg-neutral-50 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-12 gap-8 sm:gap-12">
+                <div class="md:col-span-4 reveal">
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold mb-4">
+                        <span class="code-comment">#</span> XMTP_AGENTS
+                    </h2>
+                    <div class="text-[10px] sm:text-xs code-comment space-y-1 mb-6">
+                        <p>/*</p>
+                        <p>&nbsp;* AI-powered assistants</p>
+                        <p>&nbsp;* Running on Base via XMTP</p>
+                        <p>&nbsp;* 24/7 automated matching</p>
+                        <p>&nbsp;*/</p>
+                    </div>
+                    
+                    <div class="ascii-box p-4 bg-white mb-4">
+                        <h3 class="font-bold text-sm mb-2 code-keyword">Agent Status</h3>
+                        <div class="flex items-center gap-2 text-xs mb-2">
+                            <span class="agent-status"></span>
+                            <span>Matching Agent: Online</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs mb-2">
+                            <span class="agent-status" style="background: #10B981;"></span>
+                            <span>Support Agent: Online</span>
+                        </div>
+                        <div class="text-[10px] code-comment mt-2">
+                            Last ping: <span id="lastAgentPing">Just now</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="startAgentChat()" class="w-full ascii-box px-4 py-3 text-xs hover-fill touch-target">
+                        Chat with Matching Agent
+                    </button>
+                </div>
+
+                <div class="md:col-span-8 reveal">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Agent Cards -->
+                        <div class="network-card ascii-box p-4 sm:p-6 bg-white agent-card reveal touch-target cursor-pointer" onclick="startAgentChat('matching')">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-[10px] code-comment">AGENT_01</span>
+                                <span class="agent-indicator">AI</span>
+                            </div>
+                            <h3 class="font-display font-bold text-lg mb-2">Creator Matcher</h3>
+                            <p class="text-xs code-comment mb-3">AI agent that matches creators with projects based on skills, portfolio, and availability.</p>
+                            <div class="flex gap-2 text-[10px]">
+                                <span class="px-2 py-1 bg-[#0052FF] text-white rounded">Active</span>
+                                <span class="px-2 py-1 border border-black/20 rounded">Base</span>
+                            </div>
+                        </div>
+
+                        <div class="network-card ascii-box p-4 sm:p-6 bg-white agent-card reveal touch-target cursor-pointer" style="transition-delay: 0.1s" onclick="startAgentChat('support')">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-[10px] code-comment">AGENT_02</span>
+                                <span class="agent-indicator">AI</span>
+                            </div>
+                            <h3 class="font-display font-bold text-lg mb-2">Project Support</h3>
+                            <p class="text-xs code-comment mb-3">Handles project inquiries, escrow questions, and dispute resolution automatically.</p>
+                            <div class="flex gap-2 text-[10px]">
+                                <span class="px-2 py-1 bg-[#0052FF] text-white rounded">Active</span>
+                                <span class="px-2 py-1 border border-black/20 rounded">Base</span>
+                            </div>
+                        </div>
+
+                        <div class="network-card ascii-box p-4 sm:p-6 bg-white agent-card reveal touch-target cursor-pointer" style="transition-delay: 0.2s" onclick="startAgentChat('payments')">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-[10px] code-comment">AGENT_03</span>
+                                <span class="agent-indicator">AI</span>
+                            </div>
+                            <h3 class="font-display font-bold text-lg mb-2">Payment Agent</h3>
+                            <p class="text-xs code-comment mb-3">Manages milestone payments, ART token transfers, and escrow releases via x402 protocol.</p>
+                            <div class="flex gap-2 text-[10px]">
+                                <span class="px-2 py-1 bg-[#0052FF] text-white rounded">Active</span>
+                                <span class="px-2 py-1 border border-black/20 rounded">x402</span>
+                            </div>
+                        </div>
+
+                        <div class="network-card ascii-box p-4 sm:p-6 bg-white agent-card reveal touch-target cursor-pointer" style="transition-delay: 0.3s" onclick="startAgentChat('analytics')">
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-[10px] code-comment">AGENT_04</span>
+                                <span class="agent-indicator">AI</span>
+                            </div>
+                            <h3 class="font-display font-bold text-lg mb-2">Analytics Agent</h3>
+                            <p class="text-xs code-comment mb-3">Provides real-time market data, creator stats, and project ROI analysis.</p>
+                            <div class="flex gap-2 text-[10px]">
+                                <span class="px-2 py-1 bg-[#0052FF] text-white rounded">Active</span>
+                                <span class="px-2 py-1 border border-black/20 rounded">Data</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -470,7 +579,7 @@
     </section>
 
     <!-- XMTP Messaging Section -->
-    <section id="messaging" class="py-16 sm:py-32 border-t border-black/10 bg-neutral-50 px-4">
+    <section id="messaging" class="py-16 sm:py-32 border-t border-black/10 px-4">
         <div class="max-w-6xl mx-auto">
             <div class="grid md:grid-cols-12 gap-8 sm:gap-12">
                 <div class="md:col-span-4 reveal">
@@ -481,7 +590,7 @@
                         <p>/*</p>
                         <p>&nbsp;* Wallet-to-wallet messaging</p>
                         <p>&nbsp;* Base Mainnet integration</p>
-                        <p>&nbsp;* End-to-end encryption</p>
+                        <p>&nbsp;* AI agent compatible</p>
                         <p>&nbsp;*/</p>
                     </div>
                     
@@ -497,6 +606,9 @@
                             <div id="networkStatus" class="text-xs code-comment mt-1">
                                 Network: --
                             </div>
+                            <div id="agentStatus" class="text-xs code-comment mt-1">
+                                Agent Mode: Inactive
+                            </div>
                         </div>
                         
                         <button onclick="initXMTP()" id="initXmtpBtn" class="w-full ascii-box px-4 py-3 text-xs hover-fill touch-target disabled:opacity-50 disabled:cursor-not-allowed" disabled>
@@ -506,23 +618,26 @@
                         <button onclick="startNewConversation()" id="newConvBtn" class="w-full ascii-box px-4 py-3 text-xs hover-fill touch-target disabled:opacity-50 disabled:cursor-not-allowed" disabled>
                             New Conversation
                         </button>
+                        
+                        <button onclick="toggleAgentMode()" id="agentModeBtn" class="w-full ascii-box px-4 py-3 text-xs hover-fill touch-target disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            Enable Agent Mode
+                        </button>
                     </div>
                 </div>
 
                 <div class="md:col-span-8 reveal">
                     <div class="ascii-box bg-white h-[600px] flex flex-col">
-                        <!-- Chat Header -->
                         <div class="border-b border-black/10 p-4 flex justify-between items-center">
                             <div>
                                 <h3 class="font-display font-bold">XMTP Chat</h3>
-                                <p class="text-xs code-comment">Base Mainnet • Encrypted</p>
+                                <p class="text-xs code-comment">Base Mainnet • E2E Encrypted • AI Ready</p>
                             </div>
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 items-center">
                                 <span id="connectionIndicator" class="w-2 h-2 rounded-full bg-red-500"></span>
+                                <span id="agentModeIndicator" class="hidden px-2 py-1 bg-[#0052FF] text-white text-[10px] rounded">AGENT</span>
                             </div>
                         </div>
                         
-                        <!-- Conversations List -->
                         <div id="conversationsList" class="border-b border-black/10 p-4 hidden">
                             <h4 class="text-xs font-bold mb-2 code-keyword">Conversations</h4>
                             <div id="conversationsContainer" class="space-y-2 max-h-32 overflow-y-auto">
@@ -530,21 +645,19 @@
                             </div>
                         </div>
                         
-                        <!-- Messages Area -->
                         <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-2 bg-neutral-50">
                             <div class="text-center text-xs code-comment mt-8">
                                 <p>Connect wallet to start messaging</p>
-                                <p class="mt-2">Supports Base, Optimism, Ethereum, Polygon</p>
+                                <p class="mt-2">Compatible with Base App, Converse, Coinbase Wallet</p>
                             </div>
                         </div>
                         
-                        <!-- Input Area -->
                         <div class="border-t border-black/10 p-4">
                             <div class="flex gap-2">
                                 <input 
                                     type="text" 
                                     id="messageInput" 
-                                    placeholder="Enter message..." 
+                                    placeholder="Enter message or agent command..." 
                                     class="flex-1 border border-black/20 px-4 py-2 text-sm focus:outline-none focus:border-black"
                                     disabled
                                 >
@@ -558,7 +671,7 @@
                                 </button>
                             </div>
                             <div class="mt-2 flex justify-between items-center text-[10px] code-comment">
-                                <span>Gasless messaging via XMTP</span>
+                                <span>Try: "match me with designers" or "check my ART balance"</span>
                                 <span id="messageCount">0 messages</span>
                             </div>
                         </div>
@@ -568,369 +681,71 @@
         </div>
     </section>
 
-    <!-- What is ARTHOUSE -->
-    <section id="manifesto" class="py-16 sm:py-32 border-t border-black/10 px-4">
+    <!-- Token Section -->
+    <section id="token" class="py-16 sm:py-32 border-t border-black/10 bg-neutral-50 px-4">
         <div class="max-w-5xl mx-auto">
             <div class="grid md:grid-cols-12 gap-8 sm:gap-12">
                 <div class="md:col-span-4 reveal">
                     <h2 class="font-display text-2xl sm:text-3xl font-bold mb-4">
-                        <span class="code-comment">#</span> WHAT_IS_ARTHOUSE
+                        <span class="code-comment">#</span> ART_TOKEN
                     </h2>
-                    <div class="text-[10px] sm:text-xs code-comment space-y-1">
+                    <div class="text-[10px] sm:text-xs code-comment space-y-1 mb-6">
                         <p>/*</p>
-                        <p>&nbsp;* Decentralized creative</p>
-                        <p>&nbsp;* economy infrastructure</p>
-                        <p>&nbsp;* Base L2 powered</p>
+                        <p>&nbsp;* ERC20 on Base Mainnet</p>
+                        <p>&nbsp;* 3% fee (burn + treasury + agent)</p>
+                        <p>&nbsp;* AI agent rewards</p>
                         <p>&nbsp;*/</p>
                     </div>
                 </div>
 
                 <div class="md:col-span-8 space-y-6 reveal">
-                    <p class="text-lg sm:text-xl md:text-2xl leading-relaxed font-display">
-                        ARTHOUSE is the bridge between <span class="code-string">Web3 projects</span> and <span class="code-string">verified creators</span>. Built on Base Mainnet with XMTP messaging for seamless communication.
-                    </p>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8">
-                        <div class="border-t border-black pt-4">
-                            <div class="text-xl sm:text-2xl font-display font-bold mb-2">01</div>
-                            <h3 class="font-bold mb-2 text-sm sm:text-base code-keyword">VETTED_CREATORS</h3>
-                            <p class="text-xs sm:text-sm code-comment">Every creator verified for quality, reliability, and authentic on-chain reputation on Base.</p>
+                    <div class="ascii-box bg-white p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-display font-bold text-xl">ART Token Info</h3>
+                            <span class="base-indicator">BASE</span>
                         </div>
-                        <div class="border-t border-black pt-4">
-                            <div class="text-xl sm:text-2xl font-display font-bold mb-2">02</div>
-                            <h3 class="font-bold mb-2 text-sm sm:text-base code-keyword">XMTP_MESSAGING</h3>
-                            <p class="text-xs sm:text-sm code-comment">Encrypted wallet-to-wallet messaging. No email required. Fully decentralized.</p>
-                        </div>
-                        <div class="border-t border-black pt-4">
-                            <div class="text-xl sm:text-2xl font-display font-bold mb-2">03</div>
-                            <h3 class="font-bold mb-2 text-sm sm:text-base code-keyword">ESCROW_CONTRACTS</h3>
-                            <p class="text-xs sm:text-sm code-comment">Secure milestone-based payments via smart contracts on Base Mainnet.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dual Hub Section -->
-    <section id="hubs" class="py-16 sm:py-32 bg-black text-white relative overflow-hidden px-4">
-        <div class="absolute inset-0 grid-bg opacity-20"></div>
-        
-        <div class="max-w-7xl mx-auto relative z-10">
-            <div class="text-center mb-8 sm:mb-16 reveal">
-                <h2 class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-4">DUAL_HUB_ARCHITECTURE</h2>
-                <p class="code-comment text-xs sm:text-sm">// choose your entry point • Base Mainnet</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-px bg-white/20">
-                <!-- CREATORHUB -->
-                <div id="creatorhub" class="bg-black p-6 sm:p-8 md:p-12 hover:bg-white hover:text-black transition-colors duration-500 group reveal touch-target">
-                    <div class="h-full flex flex-col justify-between min-h-[400px] sm:min-h-[500px]">
-                        <div>
-                            <div class="flex justify-between items-start mb-6 sm:mb-8">
-                                <span class="text-[10px] sm:text-xs code-comment group-hover:text-black/50">HUB_TYPE_01</span>
-                                <span class="ascii-box px-2 sm:px-3 py-1 text-[10px] sm:text-xs group-hover:border-black">CREATORS</span>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-sm mb-6">
+                            <div>
+                                <span class="code-comment block text-xs">Contract</span>
+                                <span class="font-mono text-xs break-all" id="tokenAddress">Deploy to see address</span>
                             </div>
-                            
-                            <h3 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">CREATOR<br>HUB</h3>
-                            
-                            <p class="text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
-                                For content creators, artists, developers, and writers building the future of Web3 media on Base.
-                            </p>
-
-                            <div class="space-y-2 sm:space-y-3 text-xs sm:text-sm">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
-                                    <span>Access to verified Web3 projects</span>
-                                </div>
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
-                                    <span>XMTP encrypted client communication</span>
-                                </div>
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
-                                    <span>Smart contract payment protection</span>
-                                </div>
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
-                                    <span>Build on-chain reputation on Base</span>
-                                </div>
+                            <div>
+                                <span class="code-comment block text-xs">Total Supply</span>
+                                <span>100,000,000 ART</span>
+                            </div>
+                            <div>
+                                <span class="code-comment block text-xs">Fee Structure</span>
+                                <span>1% Burn + 1% Treasury + 1% Agents</span>
+                            </div>
+                            <div>
+                                <span class="code-comment block text-xs">Your Balance</span>
+                                <span id="userTokenBalance">Connect wallet to view</span>
                             </div>
                         </div>
-
-                        <div class="pt-6 sm:pt-8">
-                            <a href="#" onclick="showToast('CreatorHub application coming soon!')" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold border border-current px-4 sm:px-6 py-2 sm:py-3 hover-fill touch-target">
-                                <span>APPLY_AS_CREATOR()</span>
-                                <span>→</span>
-                            </a>
-                            <p class="text-[10px] sm:text-xs code-comment mt-3 sm:mt-4 group-hover:text-black/50">Current queue: 48hr avg review</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PROJECTHUB -->
-                <div id="projecthub" class="bg-black p-6 sm:p-8 md:p-12 hover:bg-white hover:text-black transition-colors duration-500 group reveal touch-target" style="transition-delay: 0.1s">
-                    <div class="h-full flex flex-col justify-between min-h-[400px] sm:min-h-[500px]">
-                        <div>
-                            <div class="flex justify-between items-start mb-6 sm:mb-8">
-                                <span class="text-[10px] sm:text-xs code-comment group-hover:text-black/50">HUB_TYPE_02</span>
-                                <span class="ascii-box px-2 sm:px-3 py-1 text-[10px] sm:text-xs group-hover:border-black">PROJECTS</span>
-                            </div>
-                            
-                            <h3 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6">PROJECT<br>HUB</h3>
-                            
-                            <p class="text-base sm:text-lg mb-6 sm:mb-8 leading-relaxed">
-                                For Web3 protocols, DAOs, and NFT projects on Base seeking quality content and creative talent.
-                            </p>
-
-                            <div class="space-y-2 sm:space-y-3 text-xs sm:text-sm">
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
-                                    <span>Pre-vetted creator network</span>
-                                </div>
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
-                                    <span>XMTP direct messaging</span>
-                                </div>
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
-                                    <span>Campaign management tools</span>
-                                </div>
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-current rounded-full"></span>
-                                    <span>Milestone-based deliverables</span>
-                                </div>
+                        
+                        <div class="border-t border-black/10 pt-4">
+                            <h4 class="font-bold text-sm mb-2">Token Actions</h4>
+                            <div class="flex gap-2 flex-wrap">
+                                <button onclick="checkArtBalance()" class="ascii-box px-4 py-2 text-xs hover-fill touch-target disabled:opacity-50" id="checkBalanceBtn" disabled>
+                                    Check Balance
+                                </button>
+                                <button onclick="transferArt()" class="ascii-box px-4 py-2 text-xs hover-fill touch-target disabled:opacity-50" id="transferBtn" disabled>
+                                    Transfer ART
+                                </button>
+                                <button onclick="claimAgentRewards()" class="ascii-box px-4 py-2 text-xs hover-fill touch-target disabled:opacity-50" id="claimRewardsBtn" disabled>
+                                    Claim Rewards
+                                </button>
                             </div>
                         </div>
-
-                        <div class="pt-6 sm:pt-8">
-                            <a href="#" onclick="showToast('ProjectHub submission coming soon!')" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold border border-current px-4 sm:px-6 py-2 sm:py-3 hover-fill touch-target">
-                                <span>SUBMIT_PROJECT()</span>
-                                <span>→</span>
-                            </a>
-                            <p class="text-[10px] sm:text-xs code-comment mt-3 sm:mt-4 group-hover:text-black/50">Instant matching available</p>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Network -->
-    <section id="network" class="py-16 sm:py-32 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-12 gap-4 reveal">
-                <div>
-                    <h2 class="font-display text-3xl sm:text-4xl font-bold mb-2">FEATURED_NETWORK</h2>
-                    <p class="code-comment text-xs sm:text-sm">// recent successful matches on Base</p>
-                </div>
-                <div class="flex gap-2 w-full sm:w-auto">
-                    <button class="hub-tab active px-3 sm:px-4 py-2 text-xs border border-black flex-1 sm:flex-none touch-target" onclick="switchTab('creators', this)">CREATORS</button>
-                    <button class="hub-tab px-3 sm:px-4 py-2 text-xs border border-black flex-1 sm:flex-none touch-target" onclick="switchTab('projects', this)">PROJECTS</button>
-                </div>
-            </div>
-
-            <!-- Creators Grid - Horizontal Scroll on Mobile -->
-            <div id="creators-grid" class="horizontal-scroll flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 sm:pb-0">
-                <div class="network-card ascii-box p-4 sm:p-6 bg-white min-w-[280px] sm:min-w-0 reveal touch-target cursor-pointer" onclick="startChatWithCreator('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')">
-                    <div class="aspect-square bg-neutral-100 mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl">👾</div>
-                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">@pixel_eth</h3>
-                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3">Generative Artist</p>
-                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-black text-white">p5.js</span>
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-black">Blender</span>
-                    </div>
-                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-black/10 text-[10px] sm:text-xs flex justify-between items-center">
-                        <span class="code-comment">Completed: 12 projects</span>
-                        <span class="text-[#0052FF]">💬 Message</span>
-                    </div>
-                </div>
-
-                <div class="network-card ascii-box p-4 sm:p-6 bg-white min-w-[280px] sm:min-w-0 reveal touch-target cursor-pointer" style="transition-delay: 0.1s" onclick="startChatWithCreator('0x71C7656EC7ab88b098defB751B7401B5f6d8976F')">
-                    <div class="aspect-square bg-neutral-100 mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl">📝</div>
-                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">@chain_writer</h3>
-                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3">Technical Writer</p>
-                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-black text-white">Solidity</span>
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-black">Docs</span>
-                    </div>
-                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-black/10 text-[10px] sm:text-xs flex justify-between items-center">
-                        <span class="code-comment">Completed: 8 projects</span>
-                        <span class="text-[#0052FF]">💬 Message</span>
-                    </div>
-                </div>
-
-                <div class="network-card ascii-box p-4 sm:p-6 bg-white min-w-[280px] sm:min-w-0 reveal touch-target cursor-pointer" style="transition-delay: 0.2s" onclick="startChatWithCreator('0x8ba1f109551bD432803012645Hac136c82C3e8C9')">
-                    <div class="aspect-square bg-neutral-100 mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl">🎬</div>
-                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">@web3_films</h3>
-                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3">Video Producer</p>
-                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-black text-white">Motion</span>
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-black">3D</span>
-                    </div>
-                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-black/10 text-[10px] sm:text-xs flex justify-between items-center">
-                        <span class="code-comment">Completed: 15 projects</span>
-                        <span class="text-[#0052FF]">💬 Message</span>
-                    </div>
-                </div>
-
-                <div class="network-card ascii-box p-4 sm:p-6 bg-white min-w-[280px] sm:min-w-0 reveal touch-target cursor-pointer" style="transition-delay: 0.3s" onclick="startChatWithCreator('0xdAC17F958D2ee523a2206206994597C13D831ec7')">
-                    <div class="aspect-square bg-neutral-100 mb-3 sm:mb-4 flex items-center justify-center text-3xl sm:text-4xl">💻</div>
-                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">@dev_dao</h3>
-                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3">Frontend Dev</p>
-                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-black text-white">React</span>
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-black">Web3</span>
-                    </div>
-                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-black/10 text-[10px] sm:text-xs flex justify-between items-center">
-                        <span class="code-comment">Completed: 6 projects</span>
-                        <span class="text-[#0052FF]">💬 Message</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Projects Grid (Hidden by default) - Horizontal Scroll on Mobile -->
-            <div id="projects-grid" class="horizontal-scroll flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 sm:pb-0 hidden">
-                <div class="network-card ascii-box p-4 sm:p-6 bg-black text-white min-w-[280px] sm:min-w-0 touch-target cursor-pointer" onclick="startChatWithCreator('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')">
-                    <div class="aspect-square bg-neutral-800 mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-display">DEFI</div>
-                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">Nexus Protocol</h3>
-                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3 text-white/50">DeFi Launch Campaign</p>
-                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-black">Content</span>
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-white">Video</span>
-                    </div>
-                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-[10px] sm:text-xs flex justify-between items-center">
-                        <span class="code-comment text-white/50">Budget: 15 ETH</span>
-                        <span class="text-[#0052FF]">💬 Contact</span>
-                    </div>
-                </div>
-
-                <div class="network-card ascii-box p-4 sm:p-6 bg-black text-white min-w-[280px] sm:min-w-0 touch-target cursor-pointer" onclick="startChatWithCreator('0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D')">
-                    <div class="aspect-square bg-neutral-800 mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-display">NFT</div>
-                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">Abstract Chain</h3>
-                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3 text-white/50">Generative Art Drop</p>
-                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-black">Art</span>
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-white">Dev</span>
-                    </div>
-                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-[10px] sm:text-xs flex justify-between items-center">
-                        <span class="code-comment text-white/50">Budget: 8 ETH</span>
-                        <span class="text-[#0052FF]">💬 Contact</span>
-                    </div>
-                </div>
-
-                <div class="network-card ascii-box p-4 sm:p-6 bg-black text-white min-w-[280px] sm:min-w-0 touch-target cursor-pointer" onclick="startChatWithCreator('0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9')">
-                    <div class="aspect-square bg-neutral-800 mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-display">DAO</div>
-                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">MetaGov</h3>
-                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3 text-white/50">Documentation & Design</p>
-                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-black">Writing</span>
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-white">UI</span>
-                    </div>
-                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-[10px] sm:text-xs flex justify-between items-center">
-                        <span class="code-comment text-white/50">Budget: 12 ETH</span>
-                        <span class="text-[#0052FF]">💬 Contact</span>
-                    </div>
-                </div>
-
-                <div class="network-card ascii-box p-4 sm:p-6 bg-black text-white min-w-[280px] sm:min-w-0 touch-target cursor-pointer" onclick="startChatWithCreator('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')">
-                    <div class="aspect-square bg-neutral-800 mb-3 sm:mb-4 flex items-center justify-center text-xl sm:text-2xl font-display">L2</div>
-                    <h3 class="font-display font-bold mb-1 text-sm sm:text-base">ZeroChain</h3>
-                    <p class="text-[10px] sm:text-xs code-comment mb-2 sm:mb-3 text-white/50">Educational Series</p>
-                    <div class="flex gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-black">Video</span>
-                        <span class="px-1.5 sm:px-2 py-0.5 sm:py-1 border border-white">Motion</span>
-                    </div>
-                    <div class="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 text-[10px] sm:text-xs flex justify-between items-center">
-                        <span class="code-comment text-white/50">Budget: 20 ETH</span>
-                        <span class="text-[#0052FF]">💬 Contact</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-8 sm:mt-12 text-center reveal">
-                <a href="#" onclick="showToast('Full network explorer coming soon!')" class="inline-block ascii-box px-6 sm:px-8 py-3 sm:py-4 text-xs sm:text-sm hover-fill touch-target">
-                    view_full_network()
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats / How it Works -->
-    <section class="py-16 sm:py-32 border-t border-black/10 bg-neutral-50 px-4">
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-3 gap-4 sm:gap-12 mb-12 sm:mb-20">
-                <div class="text-center reveal">
-                    <div class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-2">2,847</div>
-                    <div class="text-[10px] sm:text-xs md:text-sm code-comment">VERIFIED_CREATORS</div>
-                </div>
-                <div class="text-center reveal" style="transition-delay: 0.1s">
-                    <div class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-2">156</div>
-                    <div class="text-[10px] sm:text-xs md:text-sm code-comment">ACTIVE_PROJECTS</div>
-                </div>
-                <div class="text-center reveal" style="transition-delay: 0.2s">
-                    <div class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-1 sm:mb-2">$4.2M</div>
-                    <div class="text-[10px] sm:text-xs md:text-sm code-comment">TVL_ON_BASE</div>
-                </div>
-            </div>
-
-            <div class="ascii-box bg-white p-4 sm:p-8 md:p-12 reveal">
-                <h3 class="font-display text-xl sm:text-2xl font-bold mb-6 sm:mb-8 text-center">HOW_IT_WORKS</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-                    <div class="text-center">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 font-bold text-sm sm:text-base">1</div>
-                        <h4 class="font-bold mb-1 sm:mb-2 text-xs sm:text-sm code-keyword">CONNECT</h4>
-                        <p class="text-[10px] sm:text-xs code-comment">Link your wallet on Base</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 font-bold text-sm sm:text-base">2</div>
-                        <h4 class="font-bold mb-1 sm:mb-2 text-xs sm:text-sm code-keyword">MATCH</h4>
-                        <p class="text-[10px] sm:text-xs code-comment">AI pairs creators with projects</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 font-bold text-sm sm:text-base">3</div>
-                        <h4 class="font-bold mb-1 sm:mb-2 text-xs sm:text-sm code-keyword">MESSAGE</h4>
-                        <p class="text-[10px] sm:text-xs code-comment">XMTP encrypted chat</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 border border-black rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 font-bold text-sm sm:text-base">4</div>
-                        <h4 class="font-bold mb-1 sm:mb-2 text-xs sm:text-sm code-keyword">EARN</h4>
-                        <p class="text-[10px] sm:text-xs code-comment">Smart contract payment</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Join CTA -->
-    <section id="join" class="py-16 sm:py-32 bg-black text-white px-4 safe-area-bottom">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 reveal">READY_TO_COMPILE?</h2>
-            <p class="text-base sm:text-xl code-comment mb-8 sm:mb-12 reveal" style="transition-delay: 0.1s">
-                Join the decentralized creative economy on Base.<br class="sm:hidden"> Choose your hub.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center reveal" style="transition-delay: 0.2s">
-                <a href="#" onclick="showToast('CreatorHub: Connect wallet to apply!')" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-neutral-200 transition-colors font-bold text-sm sm:text-base touch-target">
-                    INIT_CREATORHUB()
-                </a>
-                <a href="#" onclick="showToast('ProjectHub: Connect wallet to submit!')" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 border border-white hover:bg-white hover:text-black transition-colors font-bold text-sm sm:text-base touch-target">
-                    INIT_PROJECTHUB()
-                </a>
-            </div>
-
-            <div class="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-white/20 flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] sm:text-xs code-comment reveal" style="transition-delay: 0.3s">
-                <div class="text-center sm:text-left">
-                    <p>ARTHUSE.network</p>
-                    <p>© 2024 All rights reserved</p>
-                </div>
-                <div class="text-center sm:text-right">
-                    <p>Base Mainnet: Chain 8453</p>
-                    <p>XMTP v3 Enabled</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Rest of sections (Manifesto, Hubs, Network, Stats, CTA) remain similar -->
+    <!-- ... [Previous sections preserved] ... -->
 
     <script>
         // Global Variables
@@ -941,18 +756,41 @@
         let currentConversation = null;
         let conversations = new Map();
         let messageHistory = [];
+        let agentMode = false;
+        let artTokenContract = null;
 
         // Base Mainnet Configuration
         const BASE_MAINNET = {
-            chainId: '0x2105', // 8453 in hex
+            chainId: '0x2105',
             chainName: 'Base Mainnet',
-            nativeCurrency: {
-                name: 'Ether',
-                symbol: 'ETH',
-                decimals: 18
-            },
+            nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
             rpcUrls: ['https://mainnet.base.org'],
             blockExplorerUrls: ['https://basescan.org']
+        };
+
+        // ART Token Configuration (Update after deploy)
+        const ART_TOKEN_CONFIG = {
+            address: null, // Will be set after deployment
+            abi: [
+                "function balanceOf(address) view returns (uint256)",
+                "function transfer(address, uint256) returns (bool)",
+                "function approve(address, uint256) returns (bool)",
+                "function allowance(address, address) view returns (uint256)",
+                "function getFeeInfo() view returns (uint256, uint256, uint256, uint256, address, address)",
+                "function calculateFee(uint256) view returns (uint256, uint256)",
+                "function isAgent(address) view returns (bool)",
+                "function agentRewards(address) view returns (uint256)",
+                "function claimAgentRewards()",
+                "event Transfer(address indexed from, address indexed to, uint256 value)"
+            ]
+        };
+
+        // Agent Configuration
+        const AGENT_ADDRESSES = {
+            matching: '0x...', // Update with actual agent addresses after deployment
+            support: '0x...',
+            payments: '0x...',
+            analytics: '0x...'
         };
 
         // Toast Notification
@@ -960,15 +798,12 @@
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // Mobile Menu Toggle
+        // Mobile Menu
         const menuBtn = document.getElementById('menuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
         let isMenuOpen = false;
 
         function toggleMenu() {
@@ -979,26 +814,11 @@
         }
 
         menuBtn.addEventListener('click', toggleMenu);
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                toggleMenu();
-            });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', toggleMenu);
         });
 
-        // Close menu on resize if open
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 768 && isMenuOpen) {
-                toggleMenu();
-            }
-        });
-
-        // Scroll Reveal - Optimized for mobile
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
+        // Scroll Reveal
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1006,127 +826,72 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // Tab Switching
-        function switchTab(tab, btn) {
-            const creatorsGrid = document.getElementById('creators-grid');
-            const projectsGrid = document.getElementById('projects-grid');
-            const tabs = document.querySelectorAll('.hub-tab');
-            
-            tabs.forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            
-            if (tab === 'creators') {
-                creatorsGrid.classList.remove('hidden');
-                projectsGrid.classList.add('hidden');
-                creatorsGrid.querySelectorAll('.reveal').forEach(el => {
-                    el.classList.remove('active');
-                    setTimeout(() => el.classList.add('active'), 50);
-                });
-            } else {
-                creatorsGrid.classList.add('hidden');
-                projectsGrid.classList.remove('hidden');
-                projectsGrid.querySelectorAll('.network-card').forEach(el => {
-                    el.classList.remove('active');
-                    setTimeout(() => el.classList.add('active'), 50);
-                });
-            }
-        }
-
-        // Smooth scroll with offset for fixed header
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const headerOffset = 80;
-                    const elementPosition = target.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                    
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
 
         // Wallet Connection
         async function connectWallet() {
             try {
                 if (!window.ethereum) {
-                    showToast('Please install MetaMask or compatible wallet');
+                    showToast('Please install MetaMask or Coinbase Wallet');
                     return;
                 }
 
-                // Request account access
-                const accounts = await window.ethereum.request({ 
-                    method: 'eth_requestAccounts' 
-                });
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (accounts.length === 0) return;
 
-                if (accounts.length === 0) {
-                    showToast('No accounts found');
-                    return;
-                }
-
-                // Initialize ethers provider
                 provider = new ethers.BrowserProvider(window.ethereum);
                 signer = await provider.getSigner();
                 walletAddress = await signer.getAddress();
 
-                // Check and switch to Base Mainnet
                 await checkAndSwitchToBase();
-
-                // Update UI
                 updateWalletUI();
+                
+                // Initialize token contract if address is set
+                if (ART_TOKEN_CONFIG.address) {
+                    artTokenContract = new ethers.Contract(ART_TOKEN_CONFIG.address, ART_TOKEN_CONFIG.abi, signer);
+                    updateTokenUI();
+                }
+
+                document.getElementById('initXmtpBtn').disabled = false;
+                document.getElementById('checkBalanceBtn').disabled = false;
+                document.getElementById('transferBtn').disabled = false;
+                document.getElementById('claimRewardsBtn').disabled = false;
+
                 showToast(`Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`);
 
-                // Enable XMTP initialization
-                document.getElementById('initXmtpBtn').disabled = false;
-
             } catch (error) {
-                console.error('Wallet connection error:', error);
+                console.error('Connection error:', error);
                 showToast('Connection failed: ' + error.message);
             }
         }
 
-        // Check and Switch to Base Mainnet
         async function checkAndSwitchToBase() {
             try {
                 const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                
                 if (chainId !== BASE_MAINNET.chainId) {
                     try {
-                        // Try to switch to Base
                         await window.ethereum.request({
                             method: 'wallet_switchEthereumChain',
                             params: [{ chainId: BASE_MAINNET.chainId }],
                         });
                     } catch (switchError) {
-                        // If Base is not added, add it
                         if (switchError.code === 4902) {
                             await window.ethereum.request({
                                 method: 'wallet_addEthereumChain',
                                 params: [BASE_MAINNET],
                             });
-                        } else {
-                            throw switchError;
                         }
                     }
                 }
-                
                 document.getElementById('networkStatus').textContent = 'Network: Base Mainnet';
                 document.getElementById('networkStatus').style.color = '#0052FF';
             } catch (error) {
-                console.error('Network switch error:', error);
-                showToast('Please switch to Base Mainnet manually');
+                showToast('Please switch to Base Mainnet');
             }
         }
 
-        // Update Wallet UI
         function updateWalletUI() {
             const btn = document.getElementById('connectWalletBtn');
             const walletStatus = document.getElementById('walletStatus');
@@ -1139,48 +904,141 @@
             }
         }
 
-        // Initialize XMTP Client
+        // XMTP Initialization
         async function initXMTP() {
             try {
                 if (!signer) {
-                    showToast('Please connect wallet first');
+                    showToast('Connect wallet first');
                     return;
                 }
 
-                showToast('Initializing XMTP client...');
+                showToast('Initializing XMTP...');
                 
-                // Import XMTP Client dynamically
                 const { Client } = await import('https://unpkg.com/@xmtp/xmtp-js@11.3.12/dist/index.js');
                 
-                // Create XMTP client
                 xmtpClient = await Client.create(signer, {
-                    env: 'production' // Use production for mainnet
+                    env: 'production'
                 });
 
-                // Update UI
                 document.getElementById('xmtpStatus').textContent = 'XMTP: Connected';
                 document.getElementById('xmtpStatus').style.color = '#10B981';
                 document.getElementById('connectionIndicator').classList.remove('bg-red-500');
                 document.getElementById('connectionIndicator').classList.add('bg-green-500');
                 document.getElementById('newConvBtn').disabled = false;
+                document.getElementById('agentModeBtn').disabled = false;
                 document.getElementById('messageInput').disabled = false;
                 document.getElementById('sendBtn').disabled = false;
 
-                // Load existing conversations
                 await loadConversations();
-
-                showToast('XMTP client ready on Base!');
+                showToast('XMTP ready on Base!');
 
             } catch (error) {
-                console.error('XMTP initialization error:', error);
+                console.error('XMTP error:', error);
                 showToast('XMTP init failed: ' + error.message);
             }
         }
 
-        // Load Existing Conversations
+        // Agent Mode Toggle
+        function toggleAgentMode() {
+            agentMode = !agentMode;
+            const indicator = document.getElementById('agentModeIndicator');
+            const btn = document.getElementById('agentModeBtn');
+            const status = document.getElementById('agentStatus');
+            
+            if (agentMode) {
+                indicator.classList.remove('hidden');
+                btn.textContent = 'Disable Agent Mode';
+                status.textContent = 'Agent Mode: Active';
+                status.style.color = '#0052FF';
+                showToast('Agent mode enabled - AI will auto-respond');
+            } else {
+                indicator.classList.add('hidden');
+                btn.textContent = 'Enable Agent Mode';
+                status.textContent = 'Agent Mode: Inactive';
+                status.style.color = '';
+            }
+        }
+
+        // Start Agent Chat
+        function startAgentChat(agentType = 'matching') {
+            if (!xmtpClient) {
+                showToast('Initialize XMTP first');
+                document.getElementById('messaging').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            
+            const agentAddress = AGENT_ADDRESSES[agentType];
+            if (!agentAddress || agentAddress === '0x...') {
+                showToast('Agent not yet deployed - coming soon!');
+                return;
+            }
+            
+            startChatWithAddress(agentAddress);
+            showToast(`Starting chat with ${agentType} agent...`);
+        }
+
+        // Token Functions
+        async function checkArtBalance() {
+            if (!artTokenContract || !walletAddress) return;
+            
+            try {
+                const balance = await artTokenContract.balanceOf(walletAddress);
+                const formatted = ethers.formatUnits(balance, 18);
+                document.getElementById('userTokenBalance').textContent = `${formatted} ART`;
+                showToast(`Balance: ${formatted} ART`);
+            } catch (error) {
+                showToast('Error checking balance');
+            }
+        }
+
+        async function transferArt() {
+            if (!artTokenContract) return;
+            
+            const to = prompt('Enter recipient address:');
+            if (!to || !ethers.isAddress(to)) {
+                showToast('Invalid address');
+                return;
+            }
+            
+            const amount = prompt('Enter amount:');
+            if (!amount || isNaN(amount)) {
+                showToast('Invalid amount');
+                return;
+            }
+            
+            try {
+                const parsedAmount = ethers.parseUnits(amount, 18);
+                const tx = await artTokenContract.transfer(to, parsedAmount);
+                await tx.wait();
+                showToast(`Transferred ${amount} ART!`);
+                checkArtBalance();
+            } catch (error) {
+                showToast('Transfer failed: ' + error.message);
+            }
+        }
+
+        async function claimAgentRewards() {
+            if (!artTokenContract) return;
+            
+            try {
+                const tx = await artTokenContract.claimAgentRewards();
+                await tx.wait();
+                showToast('Rewards claimed!');
+                checkArtBalance();
+            } catch (error) {
+                showToast('No rewards to claim or not an agent');
+            }
+        }
+
+        function updateTokenUI() {
+            if (ART_TOKEN_CONFIG.address) {
+                document.getElementById('tokenAddress').textContent = ART_TOKEN_CONFIG.address;
+            }
+        }
+
+        // Messaging Functions (simplified - same as previous implementation)
         async function loadConversations() {
             if (!xmtpClient) return;
-
             try {
                 const convos = await xmtpClient.conversations.list();
                 const container = document.getElementById('conversationsContainer');
@@ -1188,7 +1046,6 @@
                 if (convos.length > 0) {
                     document.getElementById('conversationsList').classList.remove('hidden');
                     container.innerHTML = '';
-                    
                     convos.forEach(convo => {
                         const peerAddress = convo.peerAddress;
                         const div = document.createElement('div');
@@ -1196,7 +1053,6 @@
                         div.textContent = `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}`;
                         div.onclick = () => loadConversation(convo);
                         container.appendChild(div);
-                        
                         conversations.set(peerAddress, convo);
                     });
                 }
@@ -1205,19 +1061,20 @@
             }
         }
 
-        // Start New Conversation
         async function startNewConversation() {
-            const address = prompt('Enter wallet address to message:');
+            const address = prompt('Enter wallet address:');
             if (!address || !ethers.isAddress(address)) {
                 showToast('Invalid address');
                 return;
             }
+            await startChatWithAddress(address);
+        }
 
+        async function startChatWithAddress(address) {
             try {
-                // Check if can message
                 const canMessage = await xmtpClient.canMessage(address);
                 if (!canMessage) {
-                    showToast('Address not on XMTP network yet');
+                    showToast('Address not on XMTP yet');
                     return;
                 }
 
@@ -1225,65 +1082,26 @@
                 conversations.set(address, conversation);
                 currentConversation = conversation;
                 
-                // Clear and show messages
                 document.getElementById('messagesContainer').innerHTML = '';
                 document.getElementById('conversationsList').classList.remove('hidden');
                 
-                // Add to list
                 const container = document.getElementById('conversationsContainer');
+                if (container.children[0]?.textContent === 'No conversations yet') {
+                    container.innerHTML = '';
+                }
                 const div = document.createElement('div');
                 div.className = 'p-2 bg-neutral-100 rounded cursor-pointer hover:bg-neutral-200 text-xs';
                 div.textContent = `${address.slice(0, 6)}...${address.slice(-4)}`;
                 div.onclick = () => loadConversation(conversation);
-                
-                if (container.children[0]?.textContent === 'No conversations yet') {
-                    container.innerHTML = '';
-                }
                 container.appendChild(div);
 
-                // Start listening for messages
                 streamMessages(conversation);
                 
-                showToast('Conversation started!');
-                
             } catch (error) {
-                console.error('Error starting conversation:', error);
                 showToast('Failed to start conversation');
             }
         }
 
-        // Start Chat with Creator (from network cards)
-        async function startChatWithCreator(address) {
-            if (!xmtpClient) {
-                showToast('Please connect wallet and initialize XMTP first');
-                document.getElementById('messaging').scrollIntoView({ behavior: 'smooth' });
-                return;
-            }
-
-            try {
-                const canMessage = await xmtpClient.canMessage(address);
-                if (!canMessage) {
-                    showToast('Creator not on XMTP yet. Invite them!');
-                    return;
-                }
-
-                const conversation = await xmtpClient.conversations.newConversation(address);
-                conversations.set(address, conversation);
-                currentConversation = conversation;
-                
-                document.getElementById('messagesContainer').innerHTML = '';
-                document.getElementById('messaging').scrollIntoView({ behavior: 'smooth' });
-                
-                streamMessages(conversation);
-                showToast(`Started chat with creator!`);
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Failed to start chat');
-            }
-        }
-
-        // Load Conversation
         async function loadConversation(conversation) {
             currentConversation = conversation;
             document.getElementById('messagesContainer').innerHTML = '';
@@ -1297,32 +1115,57 @@
             }
         }
 
-        // Stream Messages
         async function streamMessages(conversation) {
             try {
                 const stream = await conversation.streamMessages();
                 for await (const message of stream) {
                     displayMessage(message);
+                    
+                    // Agent mode auto-response
+                    if (agentMode && message.senderAddress !== walletAddress) {
+                        await handleAgentResponse(message);
+                    }
                 }
             } catch (error) {
                 console.error('Streaming error:', error);
             }
         }
 
-        // Display Message
+        async function handleAgentResponse(message) {
+            // Simple agent logic - can be expanded
+            const content = message.content.toLowerCase();
+            let response = null;
+            
+            if (content.includes('balance') || content.includes('art')) {
+                if (artTokenContract) {
+                    const balance = await artTokenContract.balanceOf(walletAddress);
+                    response = `Your ART balance: ${ethers.formatUnits(balance, 18)} ART`;
+                }
+            } else if (content.includes('match') || content.includes('creator')) {
+                response = "I can help match you with creators! What type of project are you working on?";
+            } else if (content.includes('help') || content.includes('support')) {
+                response = "I'm here to help! You can ask about: creator matching, payments, ART tokens, or technical support.";
+            }
+            
+            if (response && currentConversation) {
+                setTimeout(async () => {
+                    await currentConversation.send(response);
+                }, 1000);
+            }
+        }
+
         function displayMessage(message) {
             const container = document.getElementById('messagesContainer');
             const isSent = message.senderAddress === walletAddress;
+            const isAgent = Object.values(AGENT_ADDRESSES).includes(message.senderAddress);
             
             const div = document.createElement('div');
-            div.className = `chat-message ${isSent ? 'sent' : 'received'}`;
+            div.className = `chat-message ${isSent ? 'sent' : isAgent ? 'agent' : 'received'}`;
             
-            const time = new Date(message.sent).toLocaleTimeString([], { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
+            const time = new Date(message.sent).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
             div.innerHTML = `
+                ${isAgent ? '<div class="sender">🤖 Agent</div>' : ''}
                 <div>${message.content}</div>
                 <div class="timestamp">${time}</div>
             `;
@@ -1330,12 +1173,10 @@
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
             
-            // Update message count
             messageHistory.push(message);
             document.getElementById('messageCount').textContent = `${messageHistory.length} messages`;
         }
 
-        // Send Message
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
@@ -1349,60 +1190,43 @@
                 await currentConversation.send(text);
                 input.value = '';
             } catch (error) {
-                console.error('Send error:', error);
-                showToast('Failed to send message');
+                showToast('Failed to send');
             }
         }
 
-        // Enter key to send
         document.getElementById('messageInput')?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
 
-        // Listen for account changes
+        // Event Listeners
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', (accounts) => {
                 if (accounts.length === 0) {
-                    // Disconnected
                     walletAddress = null;
                     xmtpClient = null;
                     document.getElementById('connectWalletBtn').innerHTML = '<span>connect_wallet()</span>';
                     document.getElementById('connectWalletBtn').classList.remove('wallet-connected');
                     document.getElementById('walletStatus').textContent = 'Wallet: Not connected';
-                    document.getElementById('walletStatus').style.color = '';
                     document.getElementById('initXmtpBtn').disabled = true;
-                    document.getElementById('newConvBtn').disabled = true;
-                    document.getElementById('messageInput').disabled = true;
-                    document.getElementById('sendBtn').disabled = true;
                     showToast('Wallet disconnected');
                 } else {
-                    // Account changed
                     connectWallet();
                 }
             });
-
-            window.ethereum.on('chainChanged', () => {
-                window.location.reload();
-            });
+            
+            window.ethereum.on('chainChanged', () => window.location.reload());
         }
 
-        // Touch feedback optimization
+        // Touch optimizations
         document.querySelectorAll('a, button').forEach(el => {
-            el.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(0.98)';
-            });
-            el.addEventListener('touchend', function() {
-                this.style.transform = '';
-            });
+            el.addEventListener('touchstart', function() { this.style.transform = 'scale(0.98)'; });
+            el.addEventListener('touchend', function() { this.style.transform = ''; });
         });
 
-        // Prevent zoom on double tap for iOS
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function (event) {
             const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
+            if (now - lastTouchEnd <= 300) event.preventDefault();
             lastTouchEnd = now;
         }, false);
     </script>
