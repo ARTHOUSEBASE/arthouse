@@ -254,12 +254,12 @@
                         </div>
                         <div class="flex justify-between border-b border-black/10 pb-2">
                             <span class="code-comment">Fee Recipient</span>
-                            <span class="text-xs">0x9C67...A5E8</span>
+                            <span id="feeRecipientDisplay" class="text-xs">Loading...</span>
                         </div>
                     </div>
 
                     <div class="bg-neutral-50 p-3 text-xs code-comment rounded">
-                        <p>Every ARTMOLT transaction sends 3% fee to treasury wallet. Fee is automatically deducted on transfer, swap, or stake.</p>
+                        <p>Every ARTMOLT transaction sends 3% fee to the deployer wallet. Fee is automatically deducted on transfer, swap, or stake.</p>
                     </div>
                 </div>
 
@@ -546,12 +546,11 @@
 
     <script>
         // ============================================================
-        // ARTMOLT TOKEN CONFIGURATION - GANTI DENGAN ADDRESS ANDA
+        // ARTMOLT TOKEN CONFIGURATION
         // ============================================================
         
-        // ⬇️⬇️⬇️ PASTE CONTRACT ADDRESS ARTMOLT ANDA DI SINI ⬇️⬇️⬇️
-        const ARTMOLT_CONTRACT_ADDRESS = ""0x39343b531DbAc7c797137C6e1088686995334b07
-
+        // PASTE CONTRACT ADDRESS ARTMOLT ANDA DI SINI
+        const ARTMOLT_CONTRACT_ADDRESS = "0x39343b531DbAc7c797137C6e1088686995334b07";
         
         // ABI lengkap ARTMOLT contract
         const ARTMOLT_ABI = [
@@ -568,6 +567,7 @@
             "function FEE_PERCENTAGE() view returns (uint256)",
             "function FEE_RECIPIENT() view returns (address)",
             "function MAX_SUPPLY() view returns (uint256)",
+            "function owner() view returns (address)",
             
             // Write functions
             "function transfer(address to, uint256 amount) returns (bool)",
@@ -575,6 +575,7 @@
             "function transferFrom(address from, address to, uint256 amount) returns (bool)",
             "function setWhitelist(address account, bool status)",
             "function batchWhitelist(address[] accounts, bool status)",
+            "function setFeeRecipient(address newRecipient)",
             
             // Events
             "event Transfer(address indexed from, address indexed to, uint256 value)",
@@ -592,6 +593,7 @@
         let walletAddress = null;
         let isConnected = false;
         let artmoltContract = null;
+        let feeRecipient = null; // Will be fetched from contract
 
         // Base Mainnet Configuration
         const BASE_MAINNET = {
@@ -601,9 +603,6 @@
             rpcUrls: ['https://mainnet.base.org', 'https://base.llamarpc.com'],
             blockExplorerUrls: ['https://basescan.org']
         };
-
-        // Treasury wallet (fee recipient)
-        const TREASURY_ADDRESS = "0x9C67140AdE64577ef6B40BeA6a801aDf1555a5E8";
 
         // ============================================================
         // UTILITY FUNCTIONS
@@ -645,7 +644,7 @@
             addressElements.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
-                    if (id === 'contractLink' || id === 'basescanBtn') {
+                    if (id === 'contractLink') {
                         el.href = basescanUrl;
                         el.textContent = ARTMOLT_CONTRACT_ADDRESS;
                     } else {
@@ -658,6 +657,14 @@
             const basescanBtn = document.getElementById('basescanBtn');
             if (basescanBtn) {
                 basescanBtn.href = basescanUrl;
+            }
+        }
+
+        function updateFeeRecipientUI() {
+            const feeDisplay = document.getElementById('feeRecipientDisplay');
+            if (feeDisplay && feeRecipient) {
+                feeDisplay.textContent = formatAddress(feeRecipient);
+                feeDisplay.title = feeRecipient; // Show full address on hover
             }
         }
 
@@ -724,6 +731,41 @@
         }
 
         // ============================================================
+        // CONTRACT DATA FETCHING
+        // ============================================================
+
+        async function fetchFeeRecipient() {
+            if (!artmoltContract) return;
+            
+            try {
+                // Try to get fee recipient from contract
+                const recipient = await artmoltContract.FEE_RECIPIENT();
+                feeRecipient = recipient;
+                updateFeeRecipientUI();
+                console.log('Fee Recipient:', feeRecipient);
+            } catch (error) {
+                console.error('Error fetching fee recipient:', error);
+                // Fallback: try getFeeInfo
+                try {
+                    const [, recipient] = await artmoltContract.getFeeInfo();
+                    feeRecipient = recipient;
+                    updateFeeRecipientUI();
+                } catch (e) {
+                    console.error('Fallback also failed:', e);
+                    // If all fails, use contract owner as fallback
+                    try {
+                        const owner = await artmoltContract.owner();
+                        feeRecipient = owner;
+                        updateFeeRecipientUI();
+                    } catch (e2) {
+                        feeRecipient = "Unknown";
+                        updateFeeRecipientUI();
+                    }
+                }
+            }
+        }
+
+        // ============================================================
         // WALLET CONNECTION
         // ============================================================
         
@@ -763,12 +805,15 @@
                 isConnected = true;
 
                 // Initialize ARTMOLT contract
-                if (ARTMOLT_CONTRACT_ADDRESS && !ARTMOLT_CONTRACT_ADDRESS.includes("Your")) {
+                if (ARTMOLT_CONTRACT_ADDRESS && !ARTMOLT_CONTRACT_ADDRESS.includes("Your") && !ARTMOLT_CONTRACT_ADDRESS.includes("0x...")) {
                     artmoltContract = new ethers.Contract(
                         ARTMOLT_CONTRACT_ADDRESS, 
                         ARTMOLT_ABI, 
                         signer
                     );
+                    
+                    // Fetch fee recipient from contract
+                    await fetchFeeRecipient();
                 } else {
                     showToast('Please update contract address in code', 5000);
                     return;
@@ -838,6 +883,7 @@
                 walletAddress = null;
                 isConnected = false;
                 artmoltContract = null;
+                feeRecipient = null;
                 updateWalletUI();
                 showToast('Wallet disconnected');
             } else {
@@ -904,11 +950,14 @@
                 const feeFormatted = ethers.utils.formatUnits(fee, 18);
                 const netFormatted = ethers.utils.formatUnits(netAmount, 18);
                 
+                // Get current fee recipient for display
+                const currentRecipient = feeRecipient || await artmoltContract.FEE_RECIPIENT().catch(() => 'Contract');
+                
                 // Confirm with user
                 const confirmMsg = `Send ${amount} ARTMOLT?\n\n` +
                     `Fee (3%): ${formatNumber(feeFormatted, 4)} ARTMOLT\n` +
                     `Recipient gets: ${formatNumber(netFormatted, 4)} ARTMOLT\n` +
-                    `Fee to: ${formatAddress(TREASURY_ADDRESS)}\n\n` +
+                    `Fee to: ${formatAddress(currentRecipient)}\n\n` +
                     `Confirm transaction?`;
                 
                 if (!confirm(confirmMsg)) {
@@ -964,13 +1013,24 @@
                     const feeFormatted = ethers.utils.formatUnits(fee, 18);
                     const netFormatted = ethers.utils.formatUnits(net, 18);
                     
+                    // Check if user is whitelisted
+                    let whitelistStatus = 'Unknown';
+                    if (walletAddress) {
+                        try {
+                            const isWhite = await artmoltContract.isWhitelisted(walletAddress);
+                            whitelistStatus = isWhite ? 'WHITELISTED (no fee)' : 'Standard (fee applies)';
+                        } catch (e) {
+                            whitelistStatus = 'Unable to check';
+                        }
+                    }
+                    
                     alert(
                         `ARTMOLT Fee Calculation\n\n` +
                         `Amount: ${amount} ARTMOLT\n` +
                         `Fee (${percentage}%): ${formatNumber(feeFormatted, 4)} ARTMOLT\n` +
                         `Net transfer: ${formatNumber(netFormatted, 4)} ARTMOLT\n\n` +
                         `Fee recipient: ${formatAddress(recipient)}\n` +
-                        `Your wallet: ${isWhitelisted(walletAddress) ? 'WHITELISTED (no fee)' : 'Standard (fee applies)'}`
+                        `Your wallet: ${whitelistStatus}`
                     );
                 } else {
                     // Just show fee info
@@ -985,7 +1045,7 @@
                         `Total Supply: ${formatNumber(ethers.utils.formatUnits(supply, 18), 0)} ${symbol}\n` +
                         `Fee: ${percentage}%\n` +
                         `Fee Recipient: ${formatAddress(recipient)}\n\n` +
-                        `Every transaction sends ${percentage}% to treasury wallet.`
+                        `Every transaction sends ${percentage}% to the deployer wallet.`
                     );
                 }
                 
@@ -995,7 +1055,7 @@
             }
         }
 
-        async function isWhitelisted(address) {
+        async function checkWhitelistStatus(address) {
             if (!artmoltContract || !address) return false;
             try {
                 return await artmoltContract.isWhitelisted(address);
@@ -1126,7 +1186,10 @@
             updateContractUI();
             
             // Check if address is placeholder
-            if (ARTMOLT_CONTRACT_ADDRESS.includes("Your") || ARTMOLT_CONTRACT_ADDRESS.includes("0x...")) {
+            if (!ARTMOLT_CONTRACT_ADDRESS || 
+                ARTMOLT_CONTRACT_ADDRESS.includes("Your") || 
+                ARTMOLT_CONTRACT_ADDRESS.includes("0x...") ||
+                ARTMOLT_CONTRACT_ADDRESS === "") {
                 console.warn('⚠️ Please update ARTMOLT_CONTRACT_ADDRESS in the code');
                 showToast('⚠️ Update contract address in code before using', 5000);
             }
