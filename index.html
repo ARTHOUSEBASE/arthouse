@@ -3,16 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ARTHOUSE — Web3 Creator Network | Base Mainnet</title>
+    <title>ARTHOUSE — Web3 Creator Network | ARTMOLT Token | Base Mainnet</title>
     
-    <!-- Polyfills untuk XMTP -->
-    <script src="https://cdn.jsdelivr.net/npm/buffer@6.0.3/index.min.js"></script>
-    <script>
-        window.Buffer = window.Buffer || require('buffer').Buffer;
-        window.global = window;
-    </script>
-    
-    <!-- Ethers.js v5 (lebih stabil untuk browser) -->
+    <!-- Ethers.js v5 -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     
     <!-- Tailwind CSS -->
@@ -71,6 +64,7 @@
         .status-online { background: #10B981; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .feature-card { border-left: 3px solid #0052FF; }
+        .token-stats { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
     </style>
 </head>
 <body class="grid-bg">
@@ -92,6 +86,7 @@
                 <a href="#flow" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">flow</span>&nbsp;How</a>
                 <a href="#creators" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">for</span>&nbsp;Creators</a>
                 <a href="#projects" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">for</span>&nbsp;Projects</a>
+                <a href="#token" class="hover:underline decoration-2 underline-offset-4 touch-target flex items-center"><span class="code-keyword">$</span>&nbsp;ARTMOLT</a>
                 <button id="connectWalletBtn" onclick="connectWallet()" class="ascii-box px-4 py-2 text-xs hover-fill touch-target flex items-center justify-center gap-2">
                     <span>connect_wallet()</span>
                 </button>
@@ -118,6 +113,10 @@
                 <span><span class="code-comment">#</span> For Projects</span>
                 <span>→</span>
             </a>
+            <a href="#token" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target">
+                <span><span class="code-comment">#</span> ARTMOLT Token</span>
+                <span>→</span>
+            </a>
             <button onclick="connectWallet()" class="mobile-link border-b border-black/10 py-4 flex justify-between items-center touch-target text-left">
                 <span><span class="code-comment">#</span> Connect Wallet</span>
                 <span>→</span>
@@ -126,8 +125,8 @@
         <div class="absolute bottom-8 left-6 right-6">
             <div class="ascii-box p-4 text-center text-xs code-comment">
                 ARTHOUSE.network v1.0<br>
-                Base Mainnet Ready<br>
-                XMTP Integrated
+                ARTMOLT on Base Mainnet<br>
+                Powered by Clanker
             </div>
         </div>
     </div>
@@ -141,8 +140,8 @@
                         <p>// ARTHOUSE.network</p>
                         <p>// protocol: web3_creative_bridge</p>
                         <p>// network: Base Mainnet (chainId: 8453)</p>
-                        <p>// messaging: XMTP v3 (wallet-to-wallet)</p>
-                        <p>// escrow: Smart contracts with 3% fee</p>
+                        <p>// token: ARTMOLT (ERC20)</p>
+                        <p>// contract: <span id="heroContractAddress">0x...</span></p>
                         <p>// status: production</p>
                     </div>
 
@@ -153,16 +152,16 @@
 
                     <div class="max-w-xl space-y-3 sm:space-y-4 reveal" style="transition-delay: 0.2s">
                         <p class="text-base sm:text-lg md:text-xl leading-relaxed border-l-2 border-black pl-4 sm:pl-6 code-keyword">
-                            Decentralized network matching verified creators with Web3 projects. Built on Base with XMTP messaging.
+                            Decentralized network matching verified creators with Web3 projects. Powered by ARTMOLT token on Base.
                         </p>
                         <p class="pl-4 sm:pl-6 text-xs sm:text-sm code-comment">
-                            • No middlemen • Smart contract escrow • Encrypted chat • ART token rewards
+                            • No middlemen • Smart contract escrow • 3% fee rewards • ARTMOLT powered
                         </p>
                     </div>
 
                     <div class="flex flex-col gap-3 sm:gap-4 pt-2 sm:pt-4 reveal" style="transition-delay: 0.3s">
-                        <a href="#flow" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 text-center hover-fill transition-all group touch-target">
-                            <span class="font-display font-bold text-base sm:text-lg">SEE_HOW_IT_WORKS</span>
+                        <a href="#token" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 text-center hover-fill transition-all group touch-target">
+                            <span class="font-display font-bold text-base sm:text-lg">EXPLORE_ARTMOLT</span>
                         </a>
                     </div>
                 </div>
@@ -170,8 +169,8 @@
                 <div class="hidden sm:block md:col-span-5 reveal" style="transition-delay: 0.4s">
                     <div class="ascii-box p-4 sm:p-8 aspect-square flex flex-col justify-between bg-white max-w-sm mx-auto">
                         <div class="flex justify-between text-[10px] sm:text-xs code-comment">
-                            <span>network_status</span>
-                            <span>online</span>
+                            <span>token_status</span>
+                            <span class="text-[#0052FF] font-bold">ARTMOLT</span>
                         </div>
                         <div class="flex-1 flex items-center justify-center p-4">
                             <svg viewBox="0 0 200 200" class="w-full h-full animate-spin-slow">
@@ -185,12 +184,12 @@
                                 <line x1="180" y1="100" x2="100" y2="180" stroke="#0052FF" stroke-width="0.5"/>
                                 <line x1="100" y1="180" x2="20" y2="100" stroke="#0052FF" stroke-width="0.5"/>
                                 <line x1="20" y1="100" x2="100" y2="20" stroke="#0052FF" stroke-width="0.5"/>
-                                <text x="100" y="100" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#0052FF">XMTP</text>
-                                <text x="100" y="115" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#000">BASE</text>
+                                <text x="100" y="95" text-anchor="middle" font-family="JetBrains Mono" font-size="14" fill="#0052FF" font-weight="bold">ARTMOLT</text>
+                                <text x="100" y="115" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#000">BASE MAINNET</text>
                             </svg>
                         </div>
                         <div class="text-[10px] sm:text-xs code-comment">
-                            creators: 2,847 | projects: 156 | tvl: $4.2M
+                            supply: 100M | fee: 3% | chain: base
                         </div>
                     </div>
                 </div>
@@ -198,15 +197,170 @@
         </div>
     </section>
 
-    <!-- FLOW SECTION: How It Works -->
+    <!-- Token Dashboard Section (Real-time Stats) -->
+    <section id="token" class="py-16 sm:py-32 border-t border-black/10 bg-neutral-50 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12 reveal">
+                <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">ARTMOLT_TOKEN</h2>
+                <p class="code-comment text-xs sm:text-sm">// real-time stats • live on base mainnet</p>
+            </div>
+
+            <!-- Live Stats Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 reveal">
+                <div class="ascii-box p-4 bg-white text-center">
+                    <div class="text-[10px] code-comment mb-1">SYMBOL</div>
+                    <div class="font-display text-2xl font-bold text-[#0052FF]">ARTMOLT</div>
+                </div>
+                <div class="ascii-box p-4 bg-white text-center">
+                    <div class="text-[10px] code-comment mb-1">SUPPLY</div>
+                    <div class="font-display text-2xl font-bold">100M</div>
+                </div>
+                <div class="ascii-box p-4 bg-white text-center">
+                    <div class="text-[10px] code-comment mb-1">FEE</div>
+                    <div class="font-display text-2xl font-bold">3%</div>
+                </div>
+                <div class="ascii-box p-4 bg-white text-center">
+                    <div class="text-[10px] code-comment mb-1">NETWORK</div>
+                    <div class="font-display text-2xl font-bold text-[#0052FF]">BASE</div>
+                </div>
+            </div>
+
+            <!-- Contract Info & Actions -->
+            <div class="grid md:grid-cols-2 gap-8 reveal">
+                <!-- Left: Contract Details -->
+                <div class="ascii-box bg-white p-6">
+                    <h3 class="font-display font-bold text-xl mb-4">Contract Details</h3>
+                    
+                    <div class="space-y-3 text-sm mb-6">
+                        <div class="flex justify-between border-b border-black/10 pb-2">
+                            <span class="code-comment">Contract Address</span>
+                            <a id="contractLink" href="#" target="_blank" class="text-[#0052FF] hover:underline text-xs break-all">0x...</a>
+                        </div>
+                        <div class="flex justify-between border-b border-black/10 pb-2">
+                            <span class="code-comment">Token Name</span>
+                            <span class="font-bold">ARTHOUSE</span>
+                        </div>
+                        <div class="flex justify-between border-b border-black/10 pb-2">
+                            <span class="code-comment">Symbol</span>
+                            <span class="font-bold text-[#0052FF]">ARTMOLT</span>
+                        </div>
+                        <div class="flex justify-between border-b border-black/10 pb-2">
+                            <span class="code-comment">Decimals</span>
+                            <span class="font-bold">18</span>
+                        </div>
+                        <div class="flex justify-between border-b border-black/10 pb-2">
+                            <span class="code-comment">Total Supply</span>
+                            <span class="font-bold">100,000,000</span>
+                        </div>
+                        <div class="flex justify-between border-b border-black/10 pb-2">
+                            <span class="code-comment">Fee Recipient</span>
+                            <span class="text-xs">0x9C67...A5E8</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-neutral-50 p-3 text-xs code-comment rounded">
+                        <p>Every ARTMOLT transaction sends 3% fee to treasury wallet. Fee is automatically deducted on transfer, swap, or stake.</p>
+                    </div>
+                </div>
+
+                <!-- Right: Wallet Actions -->
+                <div class="ascii-box bg-white p-6">
+                    <h3 class="font-display font-bold text-xl mb-4">Your ARTMOLT</h3>
+                    
+                    <!-- Connection Status -->
+                    <div id="walletPanel" class="mb-6 p-4 bg-neutral-50 rounded text-center">
+                        <p class="text-sm code-comment mb-2">Wallet not connected</p>
+                        <button onclick="connectWallet()" class="ascii-box px-4 py-2 text-xs hover-fill touch-target">
+                            Connect to Base
+                        </button>
+                    </div>
+
+                    <!-- Balance Display (Hidden until connected) -->
+                    <div id="balancePanel" class="hidden mb-6">
+                        <div class="text-center p-4 bg-gradient-to-br from-[#0052FF]/10 to-[#10B981]/10 rounded mb-4">
+                            <div class="text-[10px] code-comment mb-1">YOUR BALANCE</div>
+                            <div id="artmoltBalance" class="font-display text-3xl font-bold text-[#0052FF]">0</div>
+                            <div class="text-sm">ARTMOLT</div>
+                        </div>
+                        
+                        <!-- Quick Stats -->
+                        <div class="grid grid-cols-2 gap-2 text-xs mb-4">
+                            <div class="p-2 bg-neutral-50 rounded text-center">
+                                <div class="code-comment">USD Value</div>
+                                <div id="usdValue" class="font-bold">$0.00</div>
+                            </div>
+                            <div class="p-2 bg-neutral-50 rounded text-center">
+                                <div class="code-comment">Network</div>
+                                <div class="font-bold text-[#0052FF]">Base</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="space-y-2">
+                        <button onclick="checkArtmoltBalance()" id="checkBtn" class="w-full ascii-box px-4 py-3 text-xs hover-fill touch-target disabled:opacity-50" disabled>
+                            Check ARTMOLT Balance
+                        </button>
+                        <button onclick="transferArtmolt()" id="sendBtn" class="w-full ascii-box px-4 py-3 text-xs hover-fill touch-target disabled:opacity-50" disabled>
+                            Send ARTMOLT
+                        </button>
+                        <button onclick="checkArtmoltFee()" id="feeBtn" class="w-full ascii-box px-4 py-3 text-xs hover-fill touch-target disabled:opacity-50" disabled>
+                            Calculate Fee (3%)
+                        </button>
+                        <a id="basescanBtn" href="#" target="_blank" class="block w-full ascii-box px-4 py-3 text-xs text-center hover:bg-black hover:text-white transition-colors touch-target">
+                            View on Basescan ↗
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity (Simulated for demo) -->
+            <div class="mt-8 reveal">
+                <h3 class="font-display font-bold text-lg mb-4">Recent ARTMOLT Activity</h3>
+                <div class="ascii-box bg-white p-4 overflow-x-auto">
+                    <table class="w-full text-xs">
+                        <thead>
+                            <tr class="border-b border-black/10 text-left code-comment">
+                                <th class="pb-2">Type</th>
+                                <th class="pb-2">Amount</th>
+                                <th class="pb-2">Fee (3%)</th>
+                                <th class="pb-2">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTable">
+                            <tr class="border-b border-black/5">
+                                <td class="py-2 text-[#0052FF]">Transfer</td>
+                                <td class="py-2">10,000 ARTMOLT</td>
+                                <td class="py-2 text-[#10B981]">300 → Treasury</td>
+                                <td class="py-2 code-comment">2 min ago</td>
+                            </tr>
+                            <tr class="border-b border-black/5">
+                                <td class="py-2 text-[#0052FF]">Swap</td>
+                                <td class="py-2">5,000 ARTMOLT</td>
+                                <td class="py-2 text-[#10B981]">150 → Treasury</td>
+                                <td class="py-2 code-comment">15 min ago</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 text-[#0052FF]">Stake</td>
+                                <td class="py-2">25,000 ARTMOLT</td>
+                                <td class="py-2 text-[#10B981]">750 → Treasury</td>
+                                <td class="py-2 code-comment">1 hr ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FLOW SECTION -->
     <section id="flow" class="py-16 sm:py-32 border-t border-black/10 px-4">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12 reveal">
                 <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">SYSTEM_FLOW</h2>
-                <p class="code-comment text-xs sm:text-sm">// creator ↔ project interaction via XMTP</p>
+                <p class="code-comment text-xs sm:text-sm">// creator ↔ project via ARTMOLT</p>
             </div>
 
-            <!-- Creator Flow -->
             <div class="grid md:grid-cols-2 gap-8 mb-16">
                 <div class="reveal">
                     <h3 class="font-display text-2xl font-bold mb-6 flex items-center gap-2">
@@ -219,33 +373,32 @@
                                 <span class="text-xs code-comment">STEP_01</span>
                                 <span class="text-xs">Connect Wallet</span>
                             </div>
-                            <p class="text-sm">Connect MetaMask/Coinbase Wallet on Base Mainnet. XMTP identity auto-generated from wallet.</p>
+                            <p class="text-sm">Connect MetaMask/Coinbase on Base. ARTMOLT ready for payments.</p>
                         </div>
                         <div class="feature-card ascii-box p-4 bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="text-xs code-comment">STEP_02</span>
                                 <span class="text-xs">Create Profile</span>
                             </div>
-                            <p class="text-sm">Upload portfolio, set skills (design, dev, writing, video), set rates in ETH/ART.</p>
+                            <p class="text-sm">Set skills, portfolio, rates in ETH or ARTMOLT.</p>
                         </div>
                         <div class="feature-card ascii-box p-4 bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="text-xs code-comment">STEP_03</span>
-                                <span class="text-xs">XMTP Matching</span>
+                                <span class="text-xs">Get Matched</span>
                             </div>
-                            <p class="text-sm">AI agent matches your skills with open projects. Receive encrypted proposals via XMTP.</p>
+                            <p class="text-sm">AI matches you with projects. Receive ARTMOLT payments.</p>
                         </div>
                         <div class="feature-card ascii-box p-4 bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="text-xs code-comment">STEP_04</span>
-                                <span class="text-xs">Work & Earn</span>
+                                <span class="text-xs">Earn ARTMOLT</span>
                             </div>
-                            <p class="text-sm">Chat with client → Deliver work → Milestone payments auto-released from escrow.</p>
+                            <p class="text-sm">Deliver work → Get paid in ARTMOLT → 3% fee supports network.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Project Flow -->
                 <div class="reveal" style="transition-delay: 0.1s">
                     <h3 class="font-display text-2xl font-bold mb-6 flex items-center gap-2">
                         <span class="status-dot status-online"></span>
@@ -257,48 +410,29 @@
                                 <span class="text-xs code-comment">STEP_01</span>
                                 <span class="text-xs">Submit Project</span>
                             </div>
-                            <p class="text-sm">Define scope, budget (ETH/ART), timeline. Deposit funds to smart contract escrow.</p>
+                            <p class="text-sm">Define scope, budget in ARTMOLT, timeline. Deposit to escrow.</p>
                         </div>
                         <div class="feature-card ascii-box p-4 bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="text-xs code-comment">STEP_02</span>
                                 <span class="text-xs">AI Matching</span>
                             </div>
-                            <p class="text-sm">Agent finds verified creators by skills, reputation, availability. XMTP invites sent.</p>
+                            <p class="text-sm">Agent finds verified creators by skills & reputation.</p>
                         </div>
                         <div class="feature-card ascii-box p-4 bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="text-xs code-comment">STEP_03</span>
-                                <span class="text-xs">Interview & Hire</span>
+                                <span class="text-xs">Hire & Work</span>
                             </div>
-                            <p class="text-sm">Review portfolios, chat via XMTP, negotiate terms. All messages encrypted wallet-to-wallet.</p>
+                            <p class="text-sm">Interview, chat, negotiate. All tracked on-chain.</p>
                         </div>
                         <div class="feature-card ascii-box p-4 bg-white">
                             <div class="flex justify-between items-start mb-2">
                                 <span class="text-xs code-comment">STEP_04</span>
-                                <span class="text-xs">Auto Payments</span>
+                                <span class="text-xs">Auto Payment</span>
                             </div>
-                            <p class="text-sm">Milestone completion → Smart contract releases payment → 3% fee (burn/treasury/agent).</p>
+                            <p class="text-sm">Milestone complete → Smart contract releases ARTMOLT.</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- XMTP Integration Detail -->
-            <div class="ascii-box bg-neutral-50 p-6 sm:p-8 reveal">
-                <h3 class="font-display text-xl font-bold mb-4">XMTP_INTEGRATION</h3>
-                <div class="grid sm:grid-cols-3 gap-4 text-sm">
-                    <div>
-                        <h4 class="font-bold mb-2 code-keyword">Wallet Messaging</h4>
-                        <p class="text-xs code-comment">No email/phone needed. Use existing wallet address (0x...) as identity. Works across Base, Optimism, Ethereum.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold mb-2 code-keyword">End-to-End Encryption</h4>
-                        <p class="text-xs code-comment">All messages encrypted. Only sender & recipient can read. No server storage of plaintext.</p>
-                    </div>
-                    <div>
-                        <h4 class="font-bold mb-2 code-keyword">Cross-App Compatible</h4>
-                        <p class="text-xs code-comment">Messages sync across Converse, Base App, Coinbase Wallet, and any XMTP-enabled app.</p>
                     </div>
                 </div>
             </div>
@@ -311,32 +445,32 @@
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="text-center mb-12 reveal">
                 <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">FOR_CREATORS</h2>
-                <p class="code-comment text-xs sm:text-sm">// join creatorhub • get matched • earn ART</p>
+                <p class="code-comment text-xs sm:text-sm">// join creatorhub • earn ARTMOLT</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-px bg-white/20">
                 <div class="bg-black p-6 sm:p-8 hover:bg-white hover:text-black transition-colors duration-500 group reveal touch-target">
                     <div class="text-[10px] code-comment group-hover:text-black/50 mb-2">BENEFIT_01</div>
                     <h3 class="font-display text-xl font-bold mb-3">Verified Projects</h3>
-                    <p class="text-sm mb-4">All projects vetted by AI + community. No scams, no fake clients. Escrow guarantees payment.</p>
+                    <p class="text-sm mb-4">All projects vetted. Escrow guarantees ARTMOLT payment.</p>
                     <div class="text-xs code-comment group-hover:text-black/50">2,400+ active projects</div>
                 </div>
                 <div class="bg-black p-6 sm:p-8 hover:bg-white hover:text-black transition-colors duration-500 group reveal touch-target" style="transition-delay: 0.1s">
                     <div class="text-[10px] code-comment group-hover:text-black/50 mb-2">BENEFIT_02</div>
-                    <h3 class="font-display text-xl font-bold mb-3">XMTP Chat</h3>
-                    <p class="text-sm mb-4">Direct encrypted chat with clients. No Discord/Telegram needed. Wallet-to-wallet messaging.</p>
-                    <div class="text-xs code-comment group-hover:text-black/50">E2E encrypted</div>
+                    <h3 class="font-display text-xl font-bold mb-3">ARTMOLT Payments</h3>
+                    <p class="text-sm mb-4">Get paid in ARTMOLT. Low fees on Base. Fast settlement.</p>
+                    <div class="text-xs code-comment group-hover:text-black/50">3% fee only on success</div>
                 </div>
                 <div class="bg-black p-6 sm:p-8 hover:bg-white hover:text-black transition-colors duration-500 group reveal touch-target" style="transition-delay: 0.2s">
                     <div class="text-[10px] code-comment group-hover:text-black/50 mb-2">BENEFIT_03</div>
-                    <h3 class="font-display text-xl font-bold mb-3">ART Rewards</h3>
-                    <p class="text-sm mb-4">Earn ART tokens for completed projects. Stake for fee discounts, governance, exclusive access.</p>
-                    <div class="text-xs code-comment group-hover:text-black/50">3% fee → 1% burn, 1% treasury, 1% rewards</div>
+                    <h3 class="font-display text-xl font-bold mb-3">Token Rewards</h3>
+                    <p class="text-sm mb-4">Top creators earn bonus ARTMOLT. Stake for fee discounts.</p>
+                    <div class="text-xs code-comment group-hover:text-black/50">1% of fees → creator rewards</div>
                 </div>
             </div>
 
             <div class="mt-12 text-center reveal">
-                <button onclick="showToast('CreatorHub: Connect wallet to apply!')" class="ascii-box px-8 py-4 bg-white text-black hover:bg-neutral-200 transition-colors font-bold text-sm touch-target">
+                <button onclick="showToast('CreatorHub: Connect wallet to apply with ARTMOLT!')" class="ascii-box px-8 py-4 bg-white text-black hover:bg-neutral-200 transition-colors font-bold text-sm touch-target">
                     APPLY_AS_CREATOR()
                 </button>
             </div>
@@ -348,91 +482,34 @@
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-12 reveal">
                 <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4">FOR_PROJECTS</h2>
-                <p class="code-comment text-xs sm:text-sm">// submit project • ai matches • hire creators</p>
+                <p class="code-comment text-xs sm:text-sm">// submit project • pay in ARTMOLT</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-px bg-black/10">
                 <div class="bg-white p-6 sm:p-8 border border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all reveal touch-target">
                     <div class="text-[10px] code-comment mb-2">FEATURE_01</div>
                     <h3 class="font-display text-xl font-bold mb-3">Pre-Vetted Talent</h3>
-                    <p class="text-sm mb-4">Access 2,800+ verified creators. AI ranks by skills, portfolio quality, on-time delivery rate.</p>
-                    <div class="text-xs code-comment">Portfolio verification required</div>
+                    <p class="text-sm mb-4">Access 2,800+ verified creators. Pay in ARTMOLT.</p>
+                    <div class="text-xs code-comment">Portfolio verified</div>
                 </div>
                 <div class="bg-white p-6 sm:p-8 border border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all reveal touch-target" style="transition-delay: 0.1s">
                     <div class="text-[10px] code-comment mb-2">FEATURE_02</div>
-                    <h3 class="font-display text-xl font-bold mb-3">Smart Escrow</h3>
-                    <p class="text-sm mb-4">Deposit funds → Milestone release → Auto payment. Dispute resolution via DAO governance.</p>
-                    <div class="text-xs code-comment">3% platform fee only on success</div>
+                    <h3 class="font-display text-xl font-bold mb-3">ARTMOLT Escrow</h3>
+                    <p class="text-sm mb-4">Deposit ARTMOLT → Milestone release → Auto payment.</p>
+                    <div class="text-xs code-comment">Smart contract secured</div>
                 </div>
                 <div class="bg-white p-6 sm:p-8 border border-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all reveal touch-target" style="transition-delay: 0.2s">
                     <div class="text-[10px] code-comment mb-2">FEATURE_03</div>
-                    <h3 class="font-display text-xl font-bold mb-3">XMTP Updates</h3>
-                    <p class="text-sm mb-4">Get instant notifications for deliverables, revisions, payments. All in your wallet app.</p>
-                    <div class="text-xs code-comment">Works with Converse, Base App</div>
+                    <h3 class="font-display text-xl font-bold mb-3">Fee Efficiency</h3>
+                    <p class="text-sm mb-4">3% platform fee vs 20% traditional. Save ARTMOLT.</p>
+                    <div class="text-xs code-comment">vs Upwork/Fiverr 20%</div>
                 </div>
             </div>
 
             <div class="mt-12 text-center reveal">
-                <button onclick="showToast('ProjectHub: Connect wallet to submit!')" class="ascii-box px-8 py-4 bg-black text-white hover:bg-neutral-800 transition-colors font-bold text-sm touch-target">
+                <button onclick="showToast('ProjectHub: Submit with ARTMOLT budget!')" class="ascii-box px-8 py-4 bg-black text-white hover:bg-neutral-800 transition-colors font-bold text-sm touch-target">
                     SUBMIT_PROJECT()
                 </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Token Section -->
-    <section id="token" class="py-16 sm:py-32 border-t border-black/10 bg-neutral-50 px-4">
-        <div class="max-w-5xl mx-auto">
-            <div class="grid md:grid-cols-12 gap-8 sm:gap-12">
-                <div class="md:col-span-4 reveal">
-                    <h2 class="font-display text-2xl sm:text-3xl font-bold mb-4">
-                        <span class="code-comment">#</span> ART_TOKEN
-                    </h2>
-                    <div class="text-[10px] sm:text-xs code-comment space-y-1 mb-6">
-                        <p>/*</p>
-                        <p>&nbsp;* ERC20 on Base Mainnet</p>
-                        <p>&nbsp;* 100M total supply</p>
-                        <p>&nbsp;* 3% transaction fee:</p>
-                        <p>&nbsp;&nbsp;&nbsp;- 1% burn (deflationary)</p>
-                        <p>&nbsp;&nbsp;&nbsp;- 1% treasury (operations)</p>
-                        <p>&nbsp;&nbsp;&nbsp;- 1% creator rewards</p>
-                        <p>&nbsp;*/</p>
-                    </div>
-                </div>
-
-                <div class="md:col-span-8 reveal">
-                    <div class="ascii-box bg-white p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-display font-bold text-xl">Token Economics</h3>
-                            <span class="base-indicator">BASE</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4 text-sm mb-6">
-                            <div class="border-b border-black/10 pb-2">
-                                <span class="code-comment block text-xs">Total Supply</span>
-                                <span class="font-bold">100,000,000 ART</span>
-                            </div>
-                            <div class="border-b border-black/10 pb-2">
-                                <span class="code-comment block text-xs">Network</span>
-                                <span class="font-bold">Base Mainnet</span>
-                            </div>
-                            <div class="border-b border-black/10 pb-2">
-                                <span class="code-comment block text-xs">Transaction Fee</span>
-                                <span class="font-bold">3%</span>
-                            </div>
-                            <div class="border-b border-black/10 pb-2">
-                                <span class="code-comment block text-xs">Fee Distribution</span>
-                                <span class="font-bold">Burn / Treasury / Rewards</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-neutral-50 p-4 text-xs code-comment">
-                            <p class="mb-2"><strong>Contract Address:</strong> <span id="tokenAddress">Deploy to see address</span></p>
-                            <p class="mb-2"><strong>Treasury:</strong> 0x9C67...A5E8</p>
-                            <p>Token powers the ARTHOUSE ecosystem. Used for payments, staking, governance, and fee discounts.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -440,17 +517,17 @@
     <!-- CTA / Footer -->
     <section class="py-16 sm:py-32 bg-black text-white px-4 safe-area-bottom">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-6 reveal">READY?</h2>
+            <h2 class="font-display text-3xl sm:text-4xl md:text-6xl font-bold mb-6 reveal">GET_ARTMOLT</h2>
             <p class="text-base sm:text-xl code-comment mb-8 reveal" style="transition-delay: 0.1s">
-                Join the decentralized creative economy on Base.
+                Join the ARTMOLT-powered creative economy on Base.
             </p>
             
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center reveal" style="transition-delay: 0.2s">
-                <button onclick="showToast('Coming soon: Full dApp launch!')" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-neutral-200 transition-colors font-bold text-sm sm:text-base touch-target">
-                    LAUNCH_APP()
+                <button onclick="showToast('Buy ARTMOLT on Uniswap Base - Coming soon!')" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 bg-white text-black hover:bg-neutral-200 transition-colors font-bold text-sm sm:text-base touch-target">
+                    BUY_ARTMOLT()
                 </button>
                 <a href="https://base.org" target="_blank" class="ascii-box px-6 sm:px-8 py-3 sm:py-4 border border-white hover:bg-white hover:text-black transition-colors font-bold text-sm sm:text-base touch-target">
-                    LEARN_BASE()
+                    ABOUT_BASE()
                 </a>
             </div>
 
@@ -460,38 +537,495 @@
                     <p>© 2024 All rights reserved</p>
                 </div>
                 <div class="text-center sm:text-right">
-                    <p>Base Mainnet • Chain 8453</p>
-                    <p>XMTP Ready • Smart Contracts Audited</p>
+                    <p>ARTMOLT on Base Mainnet</p>
+                    <p>Chain 8453 • ERC20 • 3% Fee</p>
                 </div>
             </div>
         </div>
     </section>
 
     <script>
-        // Global Variables
+        // ============================================================
+        // ARTMOLT TOKEN CONFIGURATION - GANTI DENGAN ADDRESS ANDA
+        // ============================================================
+        
+        // ⬇️⬇️⬇️ PASTE CONTRACT ADDRESS ARTMOLT ANDA DI SINI ⬇️⬇️⬇️
+        const ARTMOLT_CONTRACT_ADDRESS = "0xYourARTMOLTContractAddressHere"; // <-- GANTI INI
+        
+        // ABI lengkap ARTMOLT contract
+        const ARTMOLT_ABI = [
+            // Read functions
+            "function name() view returns (string)",
+            "function symbol() view returns (string)",
+            "function decimals() view returns (uint8)",
+            "function totalSupply() view returns (uint256)",
+            "function balanceOf(address account) view returns (uint256)",
+            "function allowance(address owner, address spender) view returns (uint256)",
+            "function isWhitelisted(address account) view returns (bool)",
+            "function calculateFee(uint256 amount) view returns (uint256 fee, uint256 netAmount)",
+            "function getFeeInfo() view returns (uint256 percentage, address recipient)",
+            "function FEE_PERCENTAGE() view returns (uint256)",
+            "function FEE_RECIPIENT() view returns (address)",
+            "function MAX_SUPPLY() view returns (uint256)",
+            
+            // Write functions
+            "function transfer(address to, uint256 amount) returns (bool)",
+            "function approve(address spender, uint256 amount) returns (bool)",
+            "function transferFrom(address from, address to, uint256 amount) returns (bool)",
+            "function setWhitelist(address account, bool status)",
+            "function batchWhitelist(address[] accounts, bool status)",
+            
+            // Events
+            "event Transfer(address indexed from, address indexed to, uint256 value)",
+            "event Approval(address indexed owner, address indexed spender, uint256 value)",
+            "event FeeCollected(address indexed from, address indexed to, uint256 feeAmount, uint256 netAmount)",
+            "event WhitelistUpdated(address indexed account, bool status)"
+        ];
+
+        // ============================================================
+        // GLOBAL VARIABLES
+        // ============================================================
+        
         let provider = null;
         let signer = null;
         let walletAddress = null;
         let isConnected = false;
+        let artmoltContract = null;
 
-        // Base Mainnet Config
+        // Base Mainnet Configuration
         const BASE_MAINNET = {
-            chainId: '0x2105',
+            chainId: '0x2105', // 8453 in hex
             chainName: 'Base Mainnet',
             nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-            rpcUrls: ['https://mainnet.base.org'],
+            rpcUrls: ['https://mainnet.base.org', 'https://base.llamarpc.com'],
             blockExplorerUrls: ['https://basescan.org']
         };
 
-        // Toast Notification
-        function showToast(message) {
+        // Treasury wallet (fee recipient)
+        const TREASURY_ADDRESS = "0x9C67140AdE64577ef6B40BeA6a801aDf1555a5E8";
+
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
+        
+        function showToast(message, duration = 3000) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        // Mobile Menu
+        function formatAddress(address) {
+            if (!address || address.length < 10) return address;
+            return `${address.slice(0, 6)}...${address.slice(-4)}`;
+        }
+
+        function formatNumber(num, decimals = 2) {
+            return parseFloat(num).toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        // ============================================================
+        // UI UPDATES
+        // ============================================================
+        
+        function updateContractUI() {
+            // Update all contract address displays
+            const addressElements = [
+                'heroContractAddress',
+                'contractLink'
+            ];
+            
+            const shortAddress = formatAddress(ARTMOLT_CONTRACT_ADDRESS);
+            const basescanUrl = `https://basescan.org/token/${ARTMOLT_CONTRACT_ADDRESS}`;
+            
+            addressElements.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (id === 'contractLink' || id === 'basescanBtn') {
+                        el.href = basescanUrl;
+                        el.textContent = ARTMOLT_CONTRACT_ADDRESS;
+                    } else {
+                        el.textContent = shortAddress;
+                    }
+                }
+            });
+
+            // Update basescan button
+            const basescanBtn = document.getElementById('basescanBtn');
+            if (basescanBtn) {
+                basescanBtn.href = basescanUrl;
+            }
+        }
+
+        function updateWalletUI() {
+            const btn = document.getElementById('connectWalletBtn');
+            const walletPanel = document.getElementById('walletPanel');
+            const balancePanel = document.getElementById('balancePanel');
+            
+            if (walletAddress) {
+                // Update nav button
+                btn.innerHTML = `<span>${formatAddress(walletAddress)}</span>`;
+                btn.classList.add('wallet-connected');
+                
+                // Update wallet panel
+                if (walletPanel) walletPanel.classList.add('hidden');
+                if (balancePanel) balancePanel.classList.remove('hidden');
+                
+                // Enable buttons
+                enableButtons();
+            } else {
+                // Reset nav button
+                btn.innerHTML = `<span>connect_wallet()</span>`;
+                btn.classList.remove('wallet-connected');
+                
+                // Reset panels
+                if (walletPanel) walletPanel.classList.remove('hidden');
+                if (balancePanel) balancePanel.classList.add('hidden');
+                
+                // Disable buttons
+                disableButtons();
+            }
+        }
+
+        function enableButtons() {
+            const buttons = ['checkBtn', 'sendBtn', 'feeBtn'];
+            buttons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.disabled = false;
+            });
+        }
+
+        function disableButtons() {
+            const buttons = ['checkBtn', 'sendBtn', 'feeBtn'];
+            buttons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.disabled = true;
+            });
+        }
+
+        function updateBalanceUI(balance) {
+            const balanceEl = document.getElementById('artmoltBalance');
+            const usdEl = document.getElementById('usdValue');
+            
+            if (balanceEl) {
+                const formatted = ethers.utils.formatUnits(balance, 18);
+                balanceEl.textContent = formatNumber(formatted, 2);
+                
+                // Simulated USD value (1 ARTMOLT = $0.01 for demo)
+                if (usdEl) {
+                    const usdValue = parseFloat(formatted) * 0.01;
+                    usdEl.textContent = `$${formatNumber(usdValue, 2)}`;
+                }
+            }
+        }
+
+        // ============================================================
+        // WALLET CONNECTION
+        // ============================================================
+        
+        async function connectWallet() {
+            try {
+                // Check if ethereum provider exists
+                if (!window.ethereum) {
+                    showToast('Please install MetaMask or Coinbase Wallet');
+                    
+                    // Mobile deep link fallback
+                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+                        window.location.href = `https://metamask.app.link/dapp/${window.location.host}`;
+                    }
+                    return;
+                }
+
+                showToast('Connecting wallet...');
+
+                // Request account access
+                const accounts = await window.ethereum.request({ 
+                    method: 'eth_requestAccounts' 
+                });
+
+                if (accounts.length === 0) {
+                    showToast('No accounts found');
+                    return;
+                }
+
+                // Initialize ethers provider (v5 syntax)
+                provider = new ethers.providers.Web3Provider(window.ethereum, {
+                    name: 'Base Mainnet',
+                    chainId: 8453
+                });
+                
+                signer = provider.getSigner();
+                walletAddress = await signer.getAddress();
+                isConnected = true;
+
+                // Initialize ARTMOLT contract
+                if (ARTMOLT_CONTRACT_ADDRESS && !ARTMOLT_CONTRACT_ADDRESS.includes("Your")) {
+                    artmoltContract = new ethers.Contract(
+                        ARTMOLT_CONTRACT_ADDRESS, 
+                        ARTMOLT_ABI, 
+                        signer
+                    );
+                } else {
+                    showToast('Please update contract address in code', 5000);
+                    return;
+                }
+
+                // Check and switch to Base
+                await checkAndSwitchToBase();
+
+                // Update UI
+                updateWalletUI();
+                showToast(`Connected: ${formatAddress(walletAddress)}`);
+
+                // Setup event listeners
+                window.ethereum.on('accountsChanged', handleAccountsChanged);
+                window.ethereum.on('chainChanged', () => window.location.reload());
+
+                // Auto-check balance
+                await checkArtmoltBalance();
+
+            } catch (error) {
+                console.error('Connection error:', error);
+                
+                if (error.code === 4001) {
+                    showToast('Connection rejected by user');
+                } else if (error.code === -32002) {
+                    showToast('Please unlock your wallet');
+                } else {
+                    showToast('Error: ' + (error.message || 'Unknown error'));
+                }
+            }
+        }
+
+        async function checkAndSwitchToBase() {
+            try {
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                
+                if (chainId !== BASE_MAINNET.chainId) {
+                    showToast('Switching to Base Mainnet...');
+                    
+                    try {
+                        // Try to switch
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: BASE_MAINNET.chainId }],
+                        });
+                    } catch (switchError) {
+                        // Chain not added, try to add it
+                        if (switchError.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [BASE_MAINNET],
+                            });
+                        } else {
+                            throw switchError;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                showToast('Please manually switch to Base Mainnet in your wallet');
+            }
+        }
+
+        function handleAccountsChanged(accounts) {
+            if (accounts.length === 0) {
+                // Disconnected
+                walletAddress = null;
+                isConnected = false;
+                artmoltContract = null;
+                updateWalletUI();
+                showToast('Wallet disconnected');
+            } else {
+                // Account changed
+                walletAddress = accounts[0];
+                if (artmoltContract) {
+                    artmoltContract = artmoltContract.connect(signer);
+                }
+                updateWalletUI();
+                checkArtmoltBalance();
+            }
+        }
+
+        // ============================================================
+        // ARTMOLT TOKEN FUNCTIONS
+        // ============================================================
+        
+        async function checkArtmoltBalance() {
+            if (!artmoltContract || !walletAddress) {
+                showToast('Connect wallet first');
+                return;
+            }
+            
+            try {
+                showToast('Checking ARTMOLT balance...');
+                
+                const balance = await artmoltContract.balanceOf(walletAddress);
+                updateBalanceUI(balance);
+                
+                const formatted = ethers.utils.formatUnits(balance, 18);
+                showToast(`Balance: ${formatNumber(formatted, 4)} ARTMOLT`);
+                
+            } catch (error) {
+                console.error('Balance check error:', error);
+                showToast('Error checking balance: ' + error.message);
+            }
+        }
+
+        async function transferArtmolt() {
+            if (!artmoltContract) {
+                showToast('Contract not initialized');
+                return;
+            }
+            
+            // Get recipient
+            const to = prompt('Enter recipient address (0x...):');
+            if (!to || !ethers.utils.isAddress(to)) {
+                showToast('Invalid address');
+                return;
+            }
+            
+            // Get amount
+            const amount = prompt('Enter ARTMOLT amount to send:');
+            if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+                showToast('Invalid amount');
+                return;
+            }
+            
+            try {
+                // Calculate fee first for display
+                const parsedAmount = ethers.utils.parseUnits(amount, 18);
+                const [fee, netAmount] = await artmoltContract.calculateFee(parsedAmount);
+                
+                const feeFormatted = ethers.utils.formatUnits(fee, 18);
+                const netFormatted = ethers.utils.formatUnits(netAmount, 18);
+                
+                // Confirm with user
+                const confirmMsg = `Send ${amount} ARTMOLT?\n\n` +
+                    `Fee (3%): ${formatNumber(feeFormatted, 4)} ARTMOLT\n` +
+                    `Recipient gets: ${formatNumber(netFormatted, 4)} ARTMOLT\n` +
+                    `Fee to: ${formatAddress(TREASURY_ADDRESS)}\n\n` +
+                    `Confirm transaction?`;
+                
+                if (!confirm(confirmMsg)) {
+                    showToast('Transaction cancelled');
+                    return;
+                }
+                
+                // Send transaction
+                showToast('Sending transaction...');
+                const tx = await artmoltContract.transfer(to, parsedAmount);
+                
+                showToast('Waiting for confirmation...');
+                await tx.wait();
+                
+                showToast(`Success! Sent ${amount} ARTMOLT`);
+                
+                // Refresh balance
+                await checkArtmoltBalance();
+                
+                // Add to activity (simulated)
+                addActivity('Transfer', amount, feeFormatted, 'Just now');
+                
+            } catch (error) {
+                console.error('Transfer error:', error);
+                
+                if (error.code === 4001) {
+                    showToast('Transaction rejected');
+                } else if (error.code === 'INSUFFICIENT_FUNDS') {
+                    showToast('Insufficient ARTMOLT balance');
+                } else {
+                    showToast('Transfer failed: ' + (error.reason || error.message));
+                }
+            }
+        }
+
+        async function checkArtmoltFee() {
+            if (!artmoltContract) {
+                showToast('Contract not initialized');
+                return;
+            }
+            
+            try {
+                // Get fee info from contract
+                const [percentage, recipient] = await artmoltContract.getFeeInfo();
+                
+                // Get amount from user
+                const amount = prompt('Enter ARTMOLT amount to calculate fee:');
+                
+                if (amount && !isNaN(amount)) {
+                    const parsedAmount = ethers.utils.parseUnits(amount, 18);
+                    const [fee, net] = await artmoltContract.calculateFee(parsedAmount);
+                    
+                    const feeFormatted = ethers.utils.formatUnits(fee, 18);
+                    const netFormatted = ethers.utils.formatUnits(net, 18);
+                    
+                    alert(
+                        `ARTMOLT Fee Calculation\n\n` +
+                        `Amount: ${amount} ARTMOLT\n` +
+                        `Fee (${percentage}%): ${formatNumber(feeFormatted, 4)} ARTMOLT\n` +
+                        `Net transfer: ${formatNumber(netFormatted, 4)} ARTMOLT\n\n` +
+                        `Fee recipient: ${formatAddress(recipient)}\n` +
+                        `Your wallet: ${isWhitelisted(walletAddress) ? 'WHITELISTED (no fee)' : 'Standard (fee applies)'}`
+                    );
+                } else {
+                    // Just show fee info
+                    const symbol = await artmoltContract.symbol();
+                    const name = await artmoltContract.name();
+                    const supply = await artmoltContract.totalSupply();
+                    
+                    alert(
+                        `ARTMOLT Token Info\n\n` +
+                        `Name: ${name}\n` +
+                        `Symbol: ${symbol}\n` +
+                        `Total Supply: ${formatNumber(ethers.utils.formatUnits(supply, 18), 0)} ${symbol}\n` +
+                        `Fee: ${percentage}%\n` +
+                        `Fee Recipient: ${formatAddress(recipient)}\n\n` +
+                        `Every transaction sends ${percentage}% to treasury wallet.`
+                    );
+                }
+                
+            } catch (error) {
+                console.error('Fee check error:', error);
+                showToast('Error checking fee info');
+            }
+        }
+
+        async function isWhitelisted(address) {
+            if (!artmoltContract || !address) return false;
+            try {
+                return await artmoltContract.isWhitelisted(address);
+            } catch {
+                return false;
+            }
+        }
+
+        function addActivity(type, amount, fee, time) {
+            const table = document.getElementById('activityTable');
+            if (!table) return;
+            
+            const row = document.createElement('tr');
+            row.className = 'border-b border-black/5 animate-pulse';
+            row.innerHTML = `
+                <td class="py-2 text-[#0052FF]">${type}</td>
+                <td class="py-2">${formatNumber(amount)} ARTMOLT</td>
+                <td class="py-2 text-[#10B981]">${formatNumber(fee, 2)} → Treasury</td>
+                <td class="py-2 code-comment">${time}</td>
+            `;
+            
+            table.insertBefore(row, table.firstChild);
+            
+            // Remove animation after a while
+            setTimeout(() => row.classList.remove('animate-pulse'), 2000);
+        }
+
+        // ============================================================
+        // MOBILE MENU
+        // ============================================================
+        
         const menuBtn = document.getElementById('menuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         let isMenuOpen = false;
@@ -508,7 +1042,15 @@
             link.addEventListener('click', toggleMenu);
         });
 
-        // Scroll Reveal
+        // ============================================================
+        // SCROLL REVEAL
+        // ============================================================
+        
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -516,137 +1058,35 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        }, observerOptions);
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Wallet Connection dengan Error Handling
-        async function connectWallet() {
-            try {
-                // Check if ethereum provider exists
-                if (!window.ethereum) {
-                    // Try WalletConnect or Coinbase Wallet deep link
-                    showToast('Please install MetaMask or use Coinbase Wallet');
+        // ============================================================
+        // SMOOTH SCROLL
+        // ============================================================
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
                     
-                    // Mobile fallback
-                    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                        window.location.href = 'https://metamask.app.link/dapp/' + window.location.host;
-                    }
-                    return;
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
                 }
+            });
+        });
 
-                // Request accounts
-                const accounts = await window.ethereum.request({ 
-                    method: 'eth_requestAccounts' 
-                });
-
-                if (accounts.length === 0) {
-                    showToast('No accounts found');
-                    return;
-                }
-
-                // Initialize ethers provider (v5 syntax)
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                walletAddress = await signer.getAddress();
-                isConnected = true;
-
-                // Check and switch to Base
-                await checkAndSwitchToBase();
-
-                // Update UI
-                updateWalletUI();
-                showToast(`Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`);
-
-                // Listen for account changes
-                window.ethereum.on('accountsChanged', handleAccountsChanged);
-                window.ethereum.on('chainChanged', () => window.location.reload());
-
-            } catch (error) {
-                console.error('Connection error:', error);
-                
-                // User rejected
-                if (error.code === 4001) {
-                    showToast('Connection rejected by user');
-                } else {
-                    showToast('Error: ' + (error.message || 'Unknown error'));
-                }
-            }
-        }
-
-        // Check and Switch Network
-        async function checkAndSwitchToBase() {
-            try {
-                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                
-                if (chainId !== BASE_MAINNET.chainId) {
-                    showToast('Switching to Base Mainnet...');
-                    
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: BASE_MAINNET.chainId }],
-                        });
-                    } catch (switchError) {
-                        // Chain not added
-                        if (switchError.code === 4902) {
-                            await window.ethereum.request({
-                                method: 'wallet_addEthereumChain',
-                                params: [BASE_MAINNET],
-                            });
-                        } else {
-                            throw switchError;
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Network error:', error);
-                showToast('Please manually switch to Base Mainnet');
-            }
-        }
-
-        // Handle account changes
-        function handleAccountsChanged(accounts) {
-            if (accounts.length === 0) {
-                // Disconnected
-                walletAddress = null;
-                isConnected = false;
-                updateWalletUI();
-                showToast('Wallet disconnected');
-            } else {
-                // Account changed
-                walletAddress = accounts[0];
-                updateWalletUI();
-            }
-        }
-
-        // Update UI
-        function updateWalletUI() {
-            const btn = document.getElementById('connectWalletBtn');
-            
-            if (walletAddress) {
-                btn.innerHTML = `<span>${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}</span>`;
-                btn.classList.add('wallet-connected');
-            } else {
-                btn.innerHTML = `<span>connect_wallet()</span>`;
-                btn.classList.remove('wallet-connected');
-            }
-        }
-
-        // XMTP Integration (Placeholder untuk future implementation)
-        // Note: XMTP butuh Node.js backend untuk production karena WASM dependencies
-        async function initXMTP() {
-            if (!isConnected) {
-                showToast('Connect wallet first');
-                return;
-            }
-            
-            showToast('XMTP integration: Coming in v2.0');
-            // Full XMTP implementation requires build step dengan Vite/Webpack
-            // untuk handle WASM dependencies
-        }
-
-        // Touch optimizations
+        // ============================================================
+        // TOUCH OPTIMIZATIONS
+        // ============================================================
+        
         document.querySelectorAll('a, button').forEach(el => {
             el.addEventListener('touchstart', function() {
                 this.style.transform = 'scale(0.98)';
@@ -666,28 +1106,28 @@
             lastTouchEnd = now;
         }, false);
 
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    const headerOffset = 80;
-                    const elementPosition = target.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                    
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Close menu on resize
+        // ============================================================
+        // WINDOW RESIZE
+        // ============================================================
+        
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 768 && isMenuOpen) {
                 toggleMenu();
+            }
+        });
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update UI with contract address
+            updateContractUI();
+            
+            // Check if address is placeholder
+            if (ARTMOLT_CONTRACT_ADDRESS.includes("Your") || ARTMOLT_CONTRACT_ADDRESS.includes("0x...")) {
+                console.warn('⚠️ Please update ARTMOLT_CONTRACT_ADDRESS in the code');
+                showToast('⚠️ Update contract address in code before using', 5000);
             }
         });
     </script>
